@@ -1,0 +1,559 @@
+@prefix : <http://data.europa.eu/ftspilot#> .
+@prefix bud: <http://data.europa.eu/3rx#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix fts: <http://data.europa.eu/ftspilot#> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rov: <http://www.w3.org/ns/regorg#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix cpov: <http://data.europa.eu/m8g/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix locn: <http://www.w3.org/ns/locn/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@base <http://data.europa.eu/ftspilot> .
+
+<http://data.europa.eu/ftspilot> rdf:type owl:Ontology ;
+                                  dct:type <http://purl.org/adms/assettype/Ontology> ;
+                                  vann:preferredNamespacePrefix "fts" ;
+                                  dct:publisher <http://publications.europa.eu/resource/authority/corporate-body/DIGIT> ;
+                                  dct:title "Financial Transparency System Pilot Vocabulary"@en ;
+                                  dct:status <http://purl.org/adms/status/UnderDevelopment> ;
+                                  dct:contributor <http://publications.europa.eu/resource/authority/corporate-body/BUDG> ;
+                                  dct:creator <http://publications.europa.eu/resource/authority/corporate-body/DIGIT> ;
+                                  dct:created "2018-02-27"^^xsd:date ;
+                                  dct:description "The FTS Pilot Vocabulary models the FTS data until 2016 as Linked Open Data"@en .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://purl.org/dc/elements/1.1/date
+<http://purl.org/dc/elements/1.1/date> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/elements/1.1/description
+<http://purl.org/dc/elements/1.1/description> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/date
+dct:date dct:description "Date may be used to express temporal information at any level of granularity.  Recommended best practice is to use an encoding scheme, such as the W3CDTF profile of ISO 8601 [W3CDTF]."@en ;
+         dct:hasVersion <http://dublincore.org/usage/terms/history/#dateT-001> ;
+         rdfs:comment "A point or period of time associated with an event in the lifecycle of the resource."@en ;
+         rdfs:isDefinedBy dct: ;
+         rdfs:label "Date"@en ;
+         rdf:type owl:AnnotationProperty ;
+         rdfs:subPropertyOf <http://purl.org/dc/elements/1.1/date> .
+
+
+###  http://purl.org/dc/terms/description
+dct:description rdf:type owl:AnnotationProperty ;
+                dct:description "Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."@en ;
+                dct:hasVersion <http://dublincore.org/usage/terms/history/#descriptionT-001> ;
+                rdfs:comment "An account of the resource."@en ;
+                rdfs:isDefinedBy dct: ;
+                rdfs:label "Description"@en ;
+                rdfs:subPropertyOf <http://purl.org/dc/elements/1.1/description> .
+
+
+###  http://purl.org/dc/terms/hasVersion
+dct:hasVersion rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/identifier
+dct:identifier rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/vocab/vann/usageNote
+vann:usageNote rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2003/06/sw-vocab-status/ns#term_status
+<http://www.w3.org/2003/06/sw-vocab-status/ns#term_status> rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#definition
+skos:definition rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2007/05/powder-s#describedby
+<http://www.w3.org/2007/05/powder-s#describedby> rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://data.europa.eu/bud#currency
+<http://data.europa.eu/bud#currency> rdf:type owl:ObjectProperty ;
+                                     rdfs:domain <http://data.europa.eu/bud#MonetaryValue> ;
+                                     rdfs:range skos:Concept .
+
+
+###  http://data.europa.eu/ftspilot#actionType
+fts:actionType rdf:type owl:ObjectProperty ;
+               rdfs:domain fts:BudgetaryCommitment ;
+               rdfs:range skos:Concept ;
+               rdfs:comment "Can be PG (Program), PA (Preparatory Action) or OT (Others)."@en ;
+               rdfs:label "action Type"@en .
+
+
+###  http://data.europa.eu/ftspilot#commitmentKey
+fts:commitmentKey rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf adms:identifier ;
+                  rdfs:domain fts:BudgetaryCommitment ;
+                  rdfs:range adms:Identifier ;
+                  rdfs:comment "Identifier of the budgetary commitment: The budgetary commitment is the operation reserving the appropriation necessary to cover subsequent payments to honour a legal commitment."@en ;
+                  rdfs:label "commitment Key"@en .
+
+
+###  http://data.europa.eu/ftspilot#committedBy
+fts:committedBy rdf:type owl:ObjectProperty ;
+                rdfs:domain fts:IndicativeTransaction ;
+                rdfs:range skos:Concept ;
+                rdfs:comment "Directorate-General of the European Commission that makes the commitment. Takes values from the Corporate Bodies NAL."@en ;
+                rdfs:label "committed By"@en .
+
+
+###  http://data.europa.eu/ftspilot#committedTo
+fts:committedTo rdf:type owl:ObjectProperty ;
+                rdfs:domain fts:IndicativeTransaction ;
+                rdfs:range fts:Recipient ;
+                rdfs:comment "The recipient to whom the amount is committed."@en ;
+                rdfs:label "committed To"@en .
+
+
+###  http://data.europa.eu/ftspilot#expenseType
+fts:expenseType rdf:type owl:ObjectProperty ;
+                rdfs:domain fts:BudgetaryCommitment ;
+                rdfs:range skos:Concept ;
+                rdfs:comment "Indicates whether it is an administrative or operational expenditure."@en ;
+                rdfs:label "expense Type"@en .
+
+
+###  http://data.europa.eu/ftspilot#financialManagementArea
+fts:financialManagementArea rdf:type owl:ObjectProperty ;
+                            rdfs:domain fts:BudgetaryCommitment ;
+                            rdfs:range skos:Concept ;
+                            rdfs:comment "The Financial Management Area represents the budget area, being BGUE (Budget Général de l'Union Européenne) or FEDF (European Development Fund)"@en ;
+                            rdfs:label "financial Management Area"@en .
+
+
+###  http://data.europa.eu/ftspilot#hasActionLocation
+fts:hasActionLocation rdf:type owl:ObjectProperty ;
+                      rdfs:domain fts:LegalCommitment ;
+                      rdfs:range dct:Location ;
+                      rdfs:comment "Geographic location in which the action is carried out. This can differ from the location of the recipient."@en ;
+                      rdfs:label "has Action Location"@en .
+
+
+###  http://data.europa.eu/ftspilot#hasBudgetLine
+fts:hasBudgetLine rdf:type owl:ObjectProperty ;
+                  rdfs:domain fts:BudgetaryCommitment ;
+                  rdfs:range <http://data.europa.eu/bud#Nomenclature> ;
+                  rdfs:comment "Reference to the EU Budget line under which this commitment is recorded."@en ;
+                  rdfs:label "has Budget Line"@en .
+
+
+###  http://data.europa.eu/ftspilot#hasCoordinator
+fts:hasCoordinator rdf:type owl:ObjectProperty ;
+                   rdfs:domain fts:LegalCommitment ;
+                   rdfs:range fts:Recipient ;
+                   rdfs:comment "In case of multiple recipients, this relationship indicates which party is the coordinator of the contract or grant."@en ;
+                   rdfs:label "has Coordinator"@en .
+
+
+###  http://data.europa.eu/ftspilot#hasEstimatedValue
+fts:hasEstimatedValue rdf:type owl:ObjectProperty ;
+                      rdfs:domain fts:IndicativeTransaction ;
+                      rdfs:range <http://data.europa.eu/bud#MonetaryValue> ;
+                      rdfs:comment "Estimated amount / indicative share for a specific beneficiary of a legal commitment. This information is not always available, depending on the type of agreement and in accordance with the Financial Regulation."@en ;
+                      rdfs:label "has Estimated Value"@en .
+
+
+###  http://data.europa.eu/ftspilot#hasIndicativeTransaction
+fts:hasIndicativeTransaction rdf:type owl:ObjectProperty ;
+                             rdfs:domain fts:BudgetaryCommitment ;
+                             rdfs:range fts:IndicativeTransaction ;
+                             rdfs:comment "A Budgetary Commitment can have different transactions linked to it."@en ;
+                             rdfs:label "has Indicative Transaction"@en .
+
+
+###  http://data.europa.eu/ftspilot#hasLegalCommitment
+fts:hasLegalCommitment rdf:type owl:ObjectProperty ;
+                       rdfs:domain fts:BudgetaryCommitment ;
+                       rdfs:range fts:LegalCommitment ;
+                       rdfs:comment "A Budgetary Commitment is always linked to a Legal Commitment."@en ;
+                       rdfs:label "has Legal Commitment"@en .
+
+
+###  http://data.europa.eu/ftspilot#hasLocation
+fts:hasLocation rdf:type owl:ObjectProperty ;
+                rdfs:domain fts:Recipient ;
+                rdfs:range dct:Location ;
+                rdfs:comment "The geographic area in which the beneficiary is located. When the recipient is a natural person, NUTS2  is used. When the recipient is an organisation, the full address is stated. "@en ;
+                rdfs:label "has Location"@en .
+
+
+###  http://data.europa.eu/ftspilot#hasTotalValue
+fts:hasTotalValue rdf:type owl:ObjectProperty ;
+                  rdfs:domain fts:BudgetaryCommitment ;
+                  rdfs:range <http://data.europa.eu/bud#MonetaryValue> ;
+                  rdfs:comment "The Total Value is the legally committed amount, i.e. the amount the EC has committed itself to paying to the beneficiary (grant) or the contractor (procurement). In case of Grants, specifies the Maximum contribution of the EC as indicated in the Grant Agreement/Decision document. In case of Procurements, specifies the Maximum Total Contract Amount as indicated in the procurement contract."@en ;
+                  rdfs:label "has Total Value"@en .
+
+
+###  http://data.europa.eu/ftspilot#positionKey
+fts:positionKey rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf adms:identifier ;
+                rdfs:domain fts:BudgetaryCommitment ;
+                rdfs:range adms:Identifier ;
+                rdfs:comment "Unique identifier of the position."@en ;
+                rdfs:label "position Key"@en .
+
+
+###  http://www.w3.org/ns/adms#identifier
+adms:identifier rdf:type owl:ObjectProperty .
+
+
+###  http://www.w3.org/ns/locn#address
+<http://www.w3.org/ns/locn#address> rdf:type owl:ObjectProperty ;
+                                    rdfs:range <http://www.w3.org/ns/locn#Address> ;
+                                    dct:identifier "locn:address"@en ;
+                                    vann:usageNote "A property to link a public organization to its address. For consistency with INSPIRE, the Location Core Vocabulary's Address class should be used."@en ;
+                                    rdfs:comment "The locn:address property relationship associates any resource with the <a href=\"#locn:Address\">Address</a> Class "^^rdf:XMLLiteral ;
+                                    rdfs:isDefinedBy <http://www.w3.org/ns/locn#> ;
+                                    rdfs:label " address"@en ,
+                                               "address"@en .
+
+
+###  http://www.w3.org/ns/locn#adminUnitL1
+<http://www.w3.org/ns/locn#adminUnitL1> rdf:type owl:ObjectProperty ;
+                                        rdfs:domain <http://www.w3.org/ns/locn#Address> ;
+                                        dct:identifier "locn:adminUnitL1"@en ,
+                                                       "urn:x-inspire:specification:gmlas:BaseTypes:3.2:adminUnit"@en ;
+                                        vann:usageNote "Best practice is to use the ISO 3166-1 code but if this is inappropriate for the context, country names should be provided in a consistent manner to reduce ambiguity. For example, either write 'United Kingdom' or 'UK' consistently throughout the data set and avoid mixing the two.    "@en ;
+                                        rdfs:comment "The uppermost administrative unit for the address, almost always a country. The domain of locn:adminUnitL1 is locn:Address and the range is a literal, conceptually defined by the <a href=\"https://inspire-twg.jrc.ec.europa.eu/inspire-fc.html#_C2612\">INSPIRE Geographical Name data type</a>."^^rdf:XMLLiteral ;
+                                        rdfs:isDefinedBy <http://www.w3.org/ns/locn#> ;
+                                        rdfs:label "admin unit level 1"@en .
+
+
+###  http://www.w3.org/ns/org#classification
+org:classification rdf:type owl:ObjectProperty ;
+                   vann:usageNote "This property links an organization to a SKOS Concept that provides a classification. As an example, the Publications Office of the European Union provides a Named Authority list of Organization Types  which is appropriate for European institutions. Other classification schemes should be used at other levels of public organization."@en ;
+                   rdfs:label "classification"@en .
+
+
+###  http://www.w3.org/ns/regorg#orgType
+rov:orgType rdf:type owl:ObjectProperty ;
+            rdfs:subPropertyOf org:classification ;
+            dct:identifier "rov:orgType" ;
+            rdfs:comment "This property records the type of organization. Familiar types are SA, PLC, LLC, GmbH etc. Each jurisdiction will have a limited set of recognized company types and these should be used in a consistent manner using a SKOS Concept Scheme. rov:orgType is a sub class of org:classification which has a range of skos:Concept."@en ;
+            rdfs:isDefinedBy <http://www.w3.org/TR/vocab-regorg/> ;
+            rdfs:label "company type"@en .
+
+
+###  http://www.w3.org/ns/regorg#registration
+rov:registration rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf adms:identifier ;
+                 rdfs:domain rov:RegisteredOrganization ;
+                 dct:identifier "rov:registration" ;
+                 rdfs:comment "The registration is a fundamental relationship between a legal entity and the authority with which it is registered and that confers legal status upon it. rov:registration is a sub property of adms:identifier which has a range of adms:Identifier. rov:registration has a domain of rov:RegisteredOrganization."@en ;
+                 rdfs:isDefinedBy rov: ;
+                 rdfs:label "registration"@en .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://data.europa.eu/bud#alias
+<http://data.europa.eu/bud#alias> rdf:type owl:DatatypeProperty ;
+                                  rdfs:domain <http://data.europa.eu/bud#Nomenclature> ;
+                                  rdfs:range rdfs:Literal .
+
+
+###  http://data.europa.eu/bud#heading
+<http://data.europa.eu/bud#heading> rdf:type owl:DatatypeProperty ;
+                                    rdfs:domain <http://data.europa.eu/bud#Nomenclature> ;
+                                    rdfs:range rdfs:Literal .
+
+
+###  http://data.europa.eu/bud#value
+<http://data.europa.eu/bud#value> rdf:type owl:DatatypeProperty ;
+                                  rdfs:domain <http://data.europa.eu/bud#MonetaryValue> ;
+                                  rdfs:range xsd:string .
+
+
+###  http://data.europa.eu/ftspilot#fundingType
+fts:fundingType rdf:type owl:DatatypeProperty ;
+                rdfs:domain fts:LegalCommitment ;
+                rdfs:range rdfs:Literal ;
+                rdfs:comment " Type of legal commitment, e.g. “grant”, “external experts”, etc."@en ;
+                rdfs:label "funding Type"@en .
+
+
+###  http://www.w3.org/2004/02/skos/core#prefLabel
+skos:prefLabel rdf:type owl:DatatypeProperty ;
+               vann:usageNote "As defined in the ORG Ontology, a preferred label is used to provide the primary, legally recognised name of the organization. An organization may only have one such name in any given language. Primary names may be provided in multiple languages with multiple instances of the preferred label property."@en ;
+               rdfs:label "preferred label"@en .
+
+
+###  http://www.w3.org/ns/locn#fullAddress
+<http://www.w3.org/ns/locn#fullAddress> rdf:type owl:DatatypeProperty ;
+                                        rdfs:domain <http://www.w3.org/ns/locn#Address> ;
+                                        rdfs:range rdfs:Literal ;
+                                        dct:identifier "locn:fullAddress"@en ;
+                                        rdfs:comment "The complete address written as a string, with or without formatting. The domain of locn:fullAddress is locn:Address."@en ;
+                                        rdfs:isDefinedBy <http://www.w3.org/ns/locn#> ;
+                                        rdfs:label "full address"@en .
+
+
+###  http://www.w3.org/ns/locn#geographicName
+<http://www.w3.org/ns/locn#geographicName> rdf:type owl:DatatypeProperty ;
+                                           rdfs:domain dct:Location ;
+                                           rdfs:range rdfs:Literal ;
+                                           dct:identifier "locn:geographicName"@en ;
+                                           rdfs:comment """<p>A geographic name is a proper noun applied to a spatial object. Taking the example used in the <a href=\"http://inspire.jrc.ec.europa.eu/documents/Data_Specifications/INSPIRE_DataSpecification_GN_v3.0.1.pdf\">INSPIRE document</a> (page 18), the following are all valid geographic names for the Greek capital:</p>
+    <ul><li>A?n?a (the Greek endonym written in the Greek script)</li><li>Athína (the standard Romanisation of the endonym)</li><li>Athens (the English language exonym)</li></ul>
+    <p>For INSPIRE-conformant data, provide the metadata for the geographic name using a skos:Concept as a datatype.</p>"""^^rdf:XMLLiteral ;
+                                           rdfs:isDefinedBy <http://www.w3.org/ns/locn#> ;
+                                           rdfs:label "geographic name"@en ;
+                                           <http://www.w3.org/2007/05/powder-s#describedby> <https://joinup.ec.europa.eu/system/files/project/Core_Vocabularies-Business_Location_Person-Specification-v0.3_0.zip> .
+
+
+###  http://www.w3.org/ns/locn#postCode
+<http://www.w3.org/ns/locn#postCode> rdf:type owl:DatatypeProperty ;
+                                     rdfs:domain <http://www.w3.org/ns/locn#Address> ;
+                                     rdfs:range rdfs:Literal ;
+                                     dct:identifier "locn:postCode"@en ;
+                                     rdfs:comment "The post code (a.k.a postal code, zip code etc.). Post codes are common elements in many countries' postal address systems. The domain of locn:postCode is locn:Address."@en ;
+                                     rdfs:isDefinedBy <http://www.w3.org/ns/locn#> ;
+                                     rdfs:label "post code"@en .
+
+
+###  http://www.w3.org/ns/locn#postName
+<http://www.w3.org/ns/locn#postName> rdf:type owl:DatatypeProperty ;
+                                     rdfs:domain <http://www.w3.org/ns/locn#Address> ;
+                                     rdfs:range rdfs:Literal ;
+                                     dct:identifier "locn:postName"@en ;
+                                     rdfs:comment "The key postal division of the address, usually the city. (INSPIRE's definition is \"One or more names created and maintained for postal purposes to identify a subdivision of addresses and postal delivery points.\") The domain of locn:postName is locn:Address."@en ;
+                                     rdfs:isDefinedBy <http://www.w3.org/ns/locn#> ;
+                                     rdfs:label "post name"@en .
+
+
+###  http://www.w3.org/ns/regorg#legalName
+rov:legalName rdf:type owl:DatatypeProperty ;
+              rdfs:range rdfs:Literal ;
+              dct:identifier "rov:legalName" ;
+              rdfs:comment "The legal name of the business. A business might have more than one legal name, particularly in countries with more than one official language. In such cases the language of the string should be identified."@en ;
+              rdfs:isDefinedBy <http://www.w3.org/TR/vocab-regorg/> ;
+              rdfs:label "legal name"@en .
+
+
+###  http://xmlns.com/foaf/0.1/familyName
+foaf:familyName rdf:type owl:DatatypeProperty ;
+                rdfs:domain foaf:Person ;
+                rdfs:range rdfs:Literal ;
+                rdfs:comment "The family name of some person." ;
+                rdfs:isDefinedBy foaf: ;
+                rdfs:label "familyName" ;
+                <http://www.w3.org/2003/06/sw-vocab-status/ns#term_status> "testing" .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://data.europa.eu/bud#MonetaryValue
+<http://data.europa.eu/bud#MonetaryValue> rdf:type owl:Class ;
+                                          vann:usageNote "Used to assign a value to amount figures and reserves."@en ;
+                                          rdfs:comment "The monetary value class expresses the values of figures in the budget. The class is used to assign a value to amount figures and reserves."@en ;
+                                          rdfs:label "Monetary Value"@en ;
+                                          rdfs:seeAlso "https://joinup.ec.europa.eu/node/151960/"^^xsd:anyURI .
+
+
+###  http://data.europa.eu/bud#Nomenclature
+<http://data.europa.eu/bud#Nomenclature> rdf:type owl:Class ;
+                                         rdfs:subClassOf skos:Concept ;
+                                         vann:usageNote "Each amount is linked to 1 nomenclature instance. A nomenclature item can be linked to none, one or several amounts."@en ;
+                                         rdfs:comment "The nomenclature class provides contextual information about amount instances, such as legal information, introductory texts, references, etc. "@en ;
+                                         rdfs:label "Nomenclature"@en ;
+                                         rdfs:seeAlso "https://joinup.ec.europa.eu/node/151960/"^^xsd:anyURI .
+
+
+###  http://data.europa.eu/ftspilot#BudgetaryCommitment
+fts:BudgetaryCommitment rdf:type owl:Class ;
+                        rdfs:comment "The budgetary commitment is the operation reserving the appropriation necessary to cover subsequent payments to honour a legal commitment."@en ;
+                        rdfs:label "Budgetary Commitment"@en ;
+                        rdfs:seeAlso "http://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:62008TJ0465&from=EN"^^xsd:anyURI .
+
+
+###  http://data.europa.eu/ftspilot#IndicativeTransaction
+fts:IndicativeTransaction rdf:type owl:Class ;
+                          rdfs:comment "'Indicative transactions’ in the FTS data are not actual transactions, but estimations or provisions for such transactions, which will be only executed once the involved parties have fulfilled their contractual and legal obligations. The value of the transaction is often an estimate and the sources may vary: actual payments, contract values, estimated repartitions of contract values, etc."@en ;
+                          rdfs:label "Indicative Transaction"@en ;
+                          rdfs:seeAlso "http://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L:2011:048:FULL&from=EN"^^xsd:anyURI .
+
+
+###  http://data.europa.eu/ftspilot#InternationalOrganization
+fts:InternationalOrganization rdf:type owl:Class ;
+                              rdfs:subClassOf org:FormalOrganization ;
+                              rdfs:comment "“international organization” means an organization established by a treaty or other instrument governed by international law and possessing its own international legal personality"@en ;
+                              rdfs:label "International Organisation"@en ;
+                              rdfs:seeAlso "http://legal.un.org/ilc/texts/instruments/english/commentaries/9_11_2011.pdf"^^xsd:anyURI .
+
+
+###  http://data.europa.eu/ftspilot#LegalCommitment
+fts:LegalCommitment rdf:type owl:Class ;
+                    rdfs:comment "A legal commitment is the act whereby the authorising officer enters into or establishes an obligation which results in a charge."@en ;
+                    rdfs:label "Legal Commitment"@en ;
+                    rdfs:seeAlso "http://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32002R1605&from=EN"^^xsd:anyURI .
+
+
+###  http://data.europa.eu/ftspilot#NGO
+fts:NGO rdf:type owl:Class ;
+        rdfs:subClassOf fts:NonProfitOrganisation ;
+        rdfs:comment "A non-governmental organization (NGO) is any non-profit, voluntary citizens' group which is organized on a local, national or international level"@en ;
+        rdfs:label "Non-Governmental Organisation"@en ;
+        rdfs:seeAlso "http://www.ngo.org/ngoinfo/define.html"^^xsd:anyURI .
+
+
+###  http://data.europa.eu/ftspilot#NonProfitOrganisation
+fts:NonProfitOrganisation rdf:type owl:Class ;
+                          rdfs:subClassOf org:FormalOrganization ;
+                          rdfs:comment "A corporation or an association that conducts business for the benefit of the general public without shareholders and without a profit motive"@en ;
+                          rdfs:label "Not-For-Profit-Organisation"@en ;
+                          rdfs:seeAlso "https://legal-dictionary.thefreedictionary.com/Non-profit+organization"^^xsd:anyURI .
+
+
+###  http://data.europa.eu/ftspilot#Recipient
+fts:Recipient rdf:type owl:Class ;
+              rdfs:subClassOf foaf:Agent ;
+              rdfs:comment "A country, beneficiary, contractor, or any natural or legal person that receives prizes or funds under a financial instrument . Beneficiary means a natural or legal person with whom a grant agreement has been signed or to whom a grant decision has been notified. Contractor means a natural or legal person with whom a procurement contract has been concluded."@en ;
+              rdfs:label "Recipient"@en ;
+              rdfs:seeAlso "http://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32012R0966&from=EN"^^xsd:anyURI .
+
+
+###  http://data.europa.eu/ftspilot#TrustFund
+fts:TrustFund rdf:type owl:Class ;
+              rdfs:subClassOf org:FormalOrganization ;
+              rdfs:comment "A Trust Fund is an innovative mechanism under the EU’s Financial Regulation used in the field of development cooperation to pool large resources from different donors to enable a swift, common, complementary and flexible response to the different dimensions of an emergency situation"@en ;
+              rdfs:label "Trust Fund"@en ;
+              rdfs:seeAlso "http://europa.eu/rapid/press-release_MEMO-15-6056_en.htm"^^xsd:anyURI .
+
+
+###  http://data.europa.eu/m8g/PublicOrganisation
+cpov:PublicOrganisation rdf:type owl:Class ;
+                        rdfs:subClassOf org:FormalOrganization ;
+                        rdfs:comment "The Public Organization class represents the organization. One organization may comprise several sub-organizations and any organization may have one or more organizational units. Each of these is described using the same properties and relationships."@en ;
+                        rdfs:label "PublicOrganisation"@en .
+
+
+###  http://purl.org/dc/terms/Location
+dct:Location rdf:type owl:Class ;
+             dct:identifier "dcterms:Location"@en ;
+             vann:usageNote "This is the key class for the Location Core Vocabulary and represents any location, irrespective of size or other restriction."@en ;
+             rdfs:comment "dcterms:Location class fully represents the Location Core Vocabulary class of Location."@en ;
+             rdfs:isDefinedBy dct: ;
+             rdfs:label "Location"@en .
+
+
+###  http://www.w3.org/2004/02/skos/core#Concept
+skos:Concept rdf:type owl:Class ;
+             rdfs:isDefinedBy <http://www.w3.org/2004/02/skos/core> ;
+             rdfs:label "Concept"@en ;
+             skos:definition "An idea or notion; a unit of thought."@en .
+
+
+###  http://www.w3.org/ns/adms#Identifier
+adms:Identifier rdf:type owl:Class ;
+                dct:identifier "adms:Identifier" ;
+                rdfs:comment "This class is based on the UN/CEFACT Identifier complex type defined in See Section 5.8 of Core Components Data Type Catalogue Version 3.1 (http://www.unece.org/fileadmin/DAM/cefact/codesfortrade/CCTS/CCTS-DTCatalogueVersion3p1.pdf) In RDF this is expressed using the following properties: - the content string should be provided using skos:notation, datatyped with the identifier scheme (inclduing the version number if appropriate); - use dcterms:creator to link to a class describing the agency that manages the identifier scheme or adms:schemaAgency to provide the name as a literal. Although not part of the ADMS conceptual model, it may be useful to provide further properties to the Identifier class such as dcterms:created to provide the date on which the identifier was issued."^^rdf:XMLLiteral ;
+                rdfs:isDefinedBy <http://www.w3.org/TR/vocab-adms> ;
+                rdfs:label "Identifier"@en .
+
+
+###  http://www.w3.org/ns/locn#Address
+<http://www.w3.org/ns/locn#Address> rdf:type owl:Class ;
+                                    dct:identifier "locn:Address"@en ;
+                                    vann:usageNote "The Address class is defined in the Location Core Vocabulary . Its properties are closely bound to the INSPIRE data model for addresses. In particular, it separates out building names and numbers from the name of the thoroughfare. This is in contrast to VCard which conflates them into 'street address.' The Location Core Vocabulary does, however, borrow the fullAddress property from VCard as a means of providing the full text of the address as a literal."@en ;
+                                    rdfs:comment "An &quot;address representation&quot; as defined in the <a href=\"https://inspire-twg.jrc.ec.europa.eu/inspire-fc.html#_C2538\">data specifications</a> of the EU INSPIRE Directive. The <a href=\"#locn:addressId\">locn:addressId</a> property may be used to link this Address to other representations."^^rdf:XMLLiteral ;
+                                    rdfs:isDefinedBy <http://www.w3.org/ns/locn#> ;
+                                    rdfs:label "Address"@en ;
+                                    <http://www.w3.org/2007/05/powder-s#describedby> <https://joinup.ec.europa.eu/system/files/project/Core_Vocabularies-Business_Location_Person-Specification-v0.3_0.zip> .
+
+
+###  http://www.w3.org/ns/org#FormalOrganization
+org:FormalOrganization rdf:type owl:Class ;
+                       rdfs:subClassOf org:Organization ,
+                                       foaf:Organization ;
+                       rdfs:comment "An Organization which is recognized in the world at large, in particular in legal jurisdictions, with associated rights and responsibilities. Examples include a Corporation, Charity, Government or Church. Note that this is a super class of `gr:BusinessEntity` and it is recommended to use the GoodRelations vocabulary to denote Business classifications such as DUNS or NAICS."@en ,
+                                    "Organización reconocida a nivel mundial, en particular en jurisdicciones legales, con derechos y responsabilidades asociadas. Algunos ejemplos son: organización corporativa, organización benéfica, organización gubernamental, organización religiosa. Se debe tener en cuenta que ésta es una superclase de `gr:BusinessEntity` y que se recomienda el uso del vocabulario GoodRelations para referirse a clasificaciones de negocios tales como DUNS o NAICS."@es ,
+                                    "Un'organizzazione che è riconosciuta a livello mondiale o, in generale, all'interno di una qualche giurisdizione, e che quindi possiede diritti e responsabilit� . Ad esempio aziende, enti governativi, associazioni di volontariato. Si noti che questa è una superclasse di `gr:BusinessEntity` e che quindi è raccomandabile usare il vocabolario GoodRelations per esprimere classificazioni di tipo industriale e commerciale come DUNS e NAICS."@it ,
+                                    "Une Organisation reconnue, en particulier par les juridictions locales, ayant des droits et des responsabilités. Exemples : entreprises, association �  but non-lucratif, collectivité, église. Notez que c'est une super-classe de `gr:BusinessEntity` et qu'il est recommandé d'utiliser le vocabulaire GoodRelations pour indiquer les classifications économiques comme le code NACE."@fr ,
+                                    "関連する権利と責任を有する（特に法的管轄区域において）世界中に広く認識されている組織。例には、企業、慈善団体、政府や教会が含まれます。"@ja ;
+                       rdfs:isDefinedBy <http://www.w3.org/ns/org> ;
+                       rdfs:label "Formal Organization"@en ,
+                                  "Organisation Formelle"@fr ,
+                                  "Organizzazione formale"@it ,
+                                  "organización formal"@es .
+
+
+###  http://www.w3.org/ns/org#Organization
+org:Organization rdf:type owl:Class ;
+                 owl:equivalentClass foaf:Organization .
+
+
+###  http://www.w3.org/ns/regorg#RegisteredOrganization
+rov:RegisteredOrganization rdf:type owl:Class ;
+                           rdfs:subClassOf org:FormalOrganization ;
+                           dct:identifier "rov:RegisteredOrganization" ;
+                           rdfs:comment """rov:RegisteredOrganization is the key class for the Registered Organization vocabulary and represents 
+    an organization that is legally registered. In many countries there is a single registry although in others, such 
+    as Spain and Germany, multiple registries exist. A Registered Organization is able to trade, is legally liable for 
+    its actions, accounts, tax affairs etc. Legal entity status is conferred by the act of registration cf. 
+    org:FormalOrganization that applies to any legal entity, including those created by other legal means.
+    This makes registered organizations distinct from the broader concept of organizations, groups or, in 
+    some jurisdictions, sole traders. Many organizations exist that are not legal entities yet to the outside world 
+    they have staff, hierarchies, locations etc. Other organizations exist that are an umbrella for several legal entities 
+    (universities are often good examples of this). This vocabulary is concerned solely with registered organizations.
+    In RDF, Registered Organization is a sub class of the Organization Ontology's org:FormalOrganization which is itself a 
+    sub class of the more general 'Agent' class found in FOAF and Dublin Core that does encompass organizations, 
+    natural persons, groups etc. - i.e. an Agent is any entity that is able to carry out actions.</p>"""@en ;
+                           rdfs:isDefinedBy <http://www.w3.org/TR/vocab-regorg/> ;
+                           rdfs:label "Registered Organization"@en .
+
+
+###  http://xmlns.com/foaf/0.1/Agent
+foaf:Agent rdf:type owl:Class ;
+           rdfs:comment "An agent (eg. person, group, software or physical artifact)." ;
+           rdfs:label "Agent" ;
+           <http://www.w3.org/2003/06/sw-vocab-status/ns#term_status> "stable" .
+
+
+###  http://xmlns.com/foaf/0.1/Organization
+foaf:Organization rdf:type owl:Class ;
+                  rdfs:subClassOf foaf:Agent ;
+                  owl:disjointWith foaf:Person ;
+                  rdfs:comment "An organization." ;
+                  rdfs:isDefinedBy foaf: ;
+                  rdfs:label "Organization" ;
+                  <http://www.w3.org/2003/06/sw-vocab-status/ns#term_status> "stable" .
+
+
+###  http://xmlns.com/foaf/0.1/Person
+foaf:Person rdf:type owl:Class ;
+            rdfs:subClassOf foaf:Agent ;
+            rdfs:comment "A person." ;
+            rdfs:isDefinedBy foaf: ;
+            rdfs:label "Person" ;
+            <http://www.w3.org/2003/06/sw-vocab-status/ns#term_status> "stable" .
+
+
+###  Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi
