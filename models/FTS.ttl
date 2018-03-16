@@ -42,12 +42,12 @@
 
 
 ###  http://purl.org/dc/terms/date
-dct:date dct:description "Date may be used to express temporal information at any level of granularity.  Recommended best practice is to use an encoding scheme, such as the W3CDTF profile of ISO 8601 [W3CDTF]."@en ;
+dct:date rdf:type owl:AnnotationProperty ;
+         dct:description "Date may be used to express temporal information at any level of granularity.  Recommended best practice is to use an encoding scheme, such as the W3CDTF profile of ISO 8601 [W3CDTF]."@en ;
          dct:hasVersion <http://dublincore.org/usage/terms/history/#dateT-001> ;
          rdfs:comment "A point or period of time associated with an event in the lifecycle of the resource."@en ;
          rdfs:isDefinedBy dct: ;
          rdfs:label "Date"@en ;
-         rdf:type owl:AnnotationProperty ;
          rdfs:subPropertyOf <http://purl.org/dc/elements/1.1/date> .
 
 

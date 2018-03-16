@@ -1,30 +1,34 @@
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag-1521042857049> <http://www.w3.org/2000/01/rdf-schema#label> "BudgetaryCommitment" .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag-1521042857049> <http://www.w3.org/2000/01/rdf-schema#comment> "BudgetaryCommitment" .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag-1521042857049> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#BudgetaryCommitment> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag-1521042857049> <http://data.europa.eu/ftspilot#hasIndicativeTransaction> <http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvbaYnory-1521042857050> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag-1521042857049> <http://data.europa.eu/ftspilot#hasTotalValue> <http://fts.example.com/MonetaryValue/ZbargnelInyhrYnory-1521042857050> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag-1521042857049> <http://data.europa.eu/ftspilot#hasLegalCommitment> <http://fts.example.com/LegalCommitment/YrtnyPbzzvgzragYnory-1521042857050> .
-<http://fts.example.com/MonetaryValue/ZbargnelInyhrYnory-1521042857050> <http://www.w3.org/2000/01/rdf-schema#label> "MonetaryValueLabel" .
-<http://fts.example.com/MonetaryValue/ZbargnelInyhrYnory-1521042857050> <http://www.w3.org/2000/01/rdf-schema#comment> "MonetaryValueComment" .
-<http://fts.example.com/MonetaryValue/ZbargnelInyhrYnory-1521042857050> <http://data.europa.eu/bud#value> "2000" .
-<http://fts.example.com/MonetaryValue/ZbargnelInyhrYnory-1521042857050> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/bud#MonetaryValue> .
-<http://fts.example.com/MonetaryValue/ZbargnelInyhrYnory-1521042857050> <http://data.europa.eu/bud#currency> <http://EUR> .
-<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzragYnory-1521042857050> <http://www.w3.org/2000/01/rdf-schema#label> "LegalCommitmentLabel" .
-<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzragYnory-1521042857050> <http://www.w3.org/2000/01/rdf-schema#comment> "LegalCommitmentComment" .
-<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzragYnory-1521042857050> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#LegalCommitment> .
-<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzragYnory-1521042857050> <http://data.europa.eu/ftspilot#hasCoordinator> <http://fts.example.com/Recipient/ErpvcvragYnory-1521042857050> .
-<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvbaYnory-1521042857050> <http://www.w3.org/2000/01/rdf-schema#label> "IndicativeTransactionLabel" .
-<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvbaYnory-1521042857050> <http://www.w3.org/2000/01/rdf-schema#comment> "IndicativeTransactionComment" .
-<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvbaYnory-1521042857050> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#IndicativeTransaction> .
-<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvbaYnory-1521042857050> <http://data.europa.eu/ftspilot#hasEstimatedValue> <http://fts.example.com/MonetaryValue/ZbargnelInyhrYnory-1521042857050> .
-<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvbaYnory-1521042857050> <http://data.europa.eu/ftspilot#committedBy> <http://wowowo> .
-<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvbaYnory-1521042857050> <http://data.europa.eu/ftspilot#committedTo> <http://fts.example.com/Recipient/ErpvcvragYnory-1521042857050> .
-<http://fts.example.com/http://data.europa.eu/m8g/PublicOrganisation/VaqvpngvirGenafnpgvbaYnory-1521042857050> <http://www.w3.org/2000/01/rdf-schema#label> "IndicativeTransaction2Label" .
-<http://fts.example.com/http://data.europa.eu/m8g/PublicOrganisation/VaqvpngvirGenafnpgvbaYnory-1521042857050> <http://www.w3.org/2000/01/rdf-schema#comment> "IndicativeTransaction2Comment" .
-<http://fts.example.com/http://data.europa.eu/m8g/PublicOrganisation/VaqvpngvirGenafnpgvbaYnory-1521042857050> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/m8g/PublicOrganisation> .
-<http://fts.example.com/Recipient/ErpvcvragYnory-1521042857050> <http://www.w3.org/2000/01/rdf-schema#label> "RecipientLabel" .
-<http://fts.example.com/Recipient/ErpvcvragYnory-1521042857050> <http://www.w3.org/2000/01/rdf-schema#comment> "RecipientComment" .
-<http://fts.example.com/Recipient/ErpvcvragYnory-1521042857050> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#Recipient> .
-<http://fts.example.com/Recipient/ErpvcvragYnory-1521042857050> <http://www.w3.org/2000/01/rdf-schema#label> "RegisterdOrganisationLabel" .
-<http://fts.example.com/Recipient/ErpvcvragYnory-1521042857050> <http://www.w3.org/2000/01/rdf-schema#comment> "RegisterdOrganisationComment" .
-<http://fts.example.com/Recipient/ErpvcvragYnory-1521042857050> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/regorg#RegisteredOrganization> .
+<http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba0-1521216218608> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/dc/terms/Location> .
+<http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba0-1521216218608> <http://www.w3.org/ns/locn#geographicName> "UNIVERSIDAD DE OVIEDO*UNIOVI, OVIEDO, Spain" .
+<http://fts.example.com/Recipient/Erpvcvrag0-1521216218609> <http://www.w3.org/2004/02/skos/core#prefLabel> "UNIVERSIDAD DE OVIEDO*UNIOVI" .
+<http://fts.example.com/Recipient/Erpvcvrag0-1521216218609> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#Recipient> .
+<http://fts.example.com/Recipient/Erpvcvrag0-1521216218609> <http://data.europa.eu/ftspilot#hasLocation> <http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba0-1521216218608> .
+<http://fts.example.com/Recipient/Erpvcvrag0-1521216218609> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/m8g/PublicOrganisation> .
+<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag0-1521216218609> <http://www.w3.org/2000/01/rdf-schema#label> "JOINT MASTERS PROGRAMMES : EMECC NURSING - EMERGENCY AND CRITICAL CARE NURSING " .
+<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag0-1521216218609> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#LegalCommitment> .
+<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag0-1521216218609> <http://data.europa.eu/ftspilot#fundingType> "GRT" .
+<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag0-1521216218609> <http://data.europa.eu/ftspilot#hasCoordinator> <http://fts.example.com/Recipient/Erpvcvrag0-1521216218609> .
+<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521216218609> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#BudgetaryCommitment> .
+<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521216218609> <http://data.europa.eu/ftspilot#hasLegalCommitment> <http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag0-1521216218609> .
+<http://fts.example.com/MonetaryValue/ZbargnelInyhr0-1521216218609> <http://data.europa.eu/bud#value> "104997.0" .
+<http://fts.example.com/MonetaryValue/ZbargnelInyhr0-1521216218609> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/bud#MonetaryValue> .
+<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba0-1521216218609> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#IndicativeTransaction> .
+<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba0-1521216218609> <http://data.europa.eu/ftspilot#committedTo> <http://fts.example.com/Recipient/Erpvcvrag0-1521216218609> .
+<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba0-1521216218609> <http://data.europa.eu/ftspilot#hasEstimatedValue> <http://fts.example.com/MonetaryValue/ZbargnelInyhr0-1521216218609> .
+<http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba1-1521216218610> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/dc/terms/Location> .
+<http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba1-1521216218610> <http://www.w3.org/ns/locn#geographicName> "ECOLE NORMALE SUPERIEURE DE LYON*ENS DE LYON, LYON, France" .
+<http://fts.example.com/Recipient/Erpvcvrag1-1521216218610> <http://www.w3.org/2004/02/skos/core#prefLabel> "ECOLE NORMALE SUPERIEURE DE LYON*ENS DE LYON" .
+<http://fts.example.com/Recipient/Erpvcvrag1-1521216218610> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#Recipient> .
+<http://fts.example.com/Recipient/Erpvcvrag1-1521216218610> <http://data.europa.eu/ftspilot#hasLocation> <http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba1-1521216218610> .
+<http://fts.example.com/Recipient/Erpvcvrag1-1521216218610> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/m8g/PublicOrganisation> .
+<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag1-1521216218610> <http://www.w3.org/2000/01/rdf-schema#label> "JOINT MASTERS PROGRAMMES : ATOMIC SCALE MODELLING OF PHYSICAL, CHEMICAL AND BIO-MOLECULAR SYSTEMS" .
+<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag1-1521216218610> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#LegalCommitment> .
+<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag1-1521216218610> <http://data.europa.eu/ftspilot#fundingType> "GRT" .
+<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag1-1521216218610> <http://data.europa.eu/ftspilot#hasCoordinator> <http://fts.example.com/Recipient/Erpvcvrag1-1521216218610> .
+<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521216218610> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#BudgetaryCommitment> .
+<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521216218610> <http://data.europa.eu/ftspilot#hasLegalCommitment> <http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag1-1521216218610> .
+<http://fts.example.com/MonetaryValue/ZbargnelInyhr1-1521216218610> <http://data.europa.eu/bud#value> "47000.0" .
+<http://fts.example.com/MonetaryValue/ZbargnelInyhr1-1521216218610> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/bud#MonetaryValue> .
+<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba1-1521216218611> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#IndicativeTransaction> .
+<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba1-1521216218611> <http://data.europa.eu/ftspilot#committedTo> <http://fts.example.com/Recipient/Erpvcvrag1-1521216218610> .
+<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba1-1521216218611> <http://data.europa.eu/ftspilot#hasEstimatedValue> <http://fts.example.com/MonetaryValue/ZbargnelInyhr1-1521216218610> .
