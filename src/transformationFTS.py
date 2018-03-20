@@ -59,6 +59,19 @@ def main(inputdata,model):
         for ix, row in total:
 
             if ix < 2:
+
+                #----------------#
+                # Create Address #
+                #----------------#
+                lbl = "Address" + str(ix)
+                URISpec = URISpecification(def_base_uri,{"label":lbl})
+                Address_tmp = ontology.locnAddress(uri=URISpec)
+                Address_tmp.locnadminUnitL1 += row['COUNTRY_DESC_EN'] # should be skos:Concept, should throw an error if not but this is not the case it seems
+                Address_tmp.locnfullAddress += row['ADDRESS']
+                Address_tmp.locnpostName += row['CITY']
+                Address_tmp.locnpostCode += row['POST_CODE']
+
+
                 #-----------------#
                 # Create Location #
                 #-----------------#
@@ -66,7 +79,7 @@ def main(inputdata,model):
                 URISpec = URISpecification(def_base_uri,{"label":lbl})
                 Location_tmp = ontology.dctLocation(uri=URISpec)
                 Location_tmp.locngeographicName += row['LE_NAME'] + ', ' + row['CITY'] + ', ' + row['COUNTRY_DESC_EN']
-                # Address needed?
+                Location_tmp.locnaddress += Address_tmp # dct:Location has no attribute locnaddress, should be locn:Location instead? Not found in ontology...
 
                 #------------------#
                 # Create Recipient #
@@ -116,24 +129,10 @@ def main(inputdata,model):
                 lbl = "LegalCommitment" + str(ix)
                 URISpec = URISpecification(def_base_uri,{"label":lbl})
                 LegalCommitment_tmp = ontology.LegalCommitment(uri=URISpec)
-                LegalCommitment_tmp.label += row['GRANT_SUBJECT'] # to check, should be subject
+                LegalCommitment_tmp.dctdescription += row['GRANT_SUBJECT'] # to check, should be dctdescription
                 LegalCommitment_tmp.fundingType += row['LC_TYPE']
                 LegalCommitment_tmp.hasCoordinator += Recipient_tmp
-
-                # -----------------------------#
-                # Create Budgetary  Commitment #
-                # -----------------------------#
-                lbl = "BudgetaryCommitment" + str(ix)
-                URISpec = URISpecification(def_base_uri,{"label":lbl})
-                BudgetaryCommitment_tmp = ontology.BudgetaryCommitment(uri=URISpec)
-                # create positionKey
-                # lbl = "positionKey" + str(ix)
-                # URISpec = URISpecification(def_base_uri,{"label":lbl})
-                # tmp = ontology.admsIdentifier(uri=URISpec)
-                # BudgetaryCommitment_tmp.positionKey += tmp
-                # BudgetaryCommitment_tmp.commitmentKey += row['COM_HD_KEY']
-                BudgetaryCommitment_tmp.hasLegalCommitment += LegalCommitment_tmp
-                # BudgetaryCommitment_tmp.date += row['BL_YEAR']
+                # LegalCommitment_tmp.hasActionLocation += row['ACTION_LOCATION'] # should be locn:location
 
                 # ----------------------#
                 # Create Monetary Value # --> link to EU Budget
@@ -153,6 +152,45 @@ def main(inputdata,model):
                 IndicativeTransaction_tmp.committedTo += Recipient_tmp
                 # IndicativeTransaction_tmp.committedBy += row['DG_CD'] # must be skos:Concept
                 IndicativeTransaction_tmp.hasEstimatedValue += MonetaryValue_tmp
+
+                # ----------------------------#
+                # Create Budgetary Commitment #
+                # ----------------------------#
+                lbl = "BudgetaryCommitment" + str(ix)
+                URISpec = URISpecification(def_base_uri,{"label":lbl})
+                BudgetaryCommitment_tmp = ontology.BudgetaryCommitment(uri=URISpec)
+                # create positionKey
+                lbl = "positionKey" + str(ix)
+                URISpec = URISpecification(def_base_uri,{"label":lbl})
+                tmp = ontology.admsIdentifier(uri=URISpec)
+                BudgetaryCommitment_tmp.positionKey += tmp
+                BudgetaryCommitment_tmp.commitmentKey += tmp#row['COM_HD_KEY']
+                BudgetaryCommitment_tmp.dctdate += row['BL_YEAR']
+                # BudgetaryCommitment_tmp.actionType += row['ACTION_TYPE'] # should be skos: concept
+                # BudgetaryCommitment_tmp.financialManagementArea += row['FIN_MGT_AREA_CD'] # should be skos:concept
+                # BudgetaryCommitment_tmp.expenseType += row['IS_ADMIN'] # should be skos:concept
+                # BudgetaryCommitment_tmp.hasBudgetLine += row['LINE'] # should be bud:Nomenclature
+                BudgetaryCommitment_tmp.hasTotalValue += MonetaryValue_tmp
+                BudgetaryCommitment_tmp.hasIndicativeTransaction += IndicativeTransaction_tmp
+                BudgetaryCommitment_tmp.hasLegalCommitment += LegalCommitment_tmp
+
+                # --------------------#
+                # Create Nomenclature # --> link to EU Budget
+                # --------------------#
+
+                lbl = "Nomenclature" + str(ix)
+                URISpec = URISpecification(def_base_uri,{"label":lbl})
+                Nomenclature_tmp = ontology.Nomenclature(uri=URISpec)
+                Nomenclature_tmp.alias += row['LINE']
+                Nomenclature_tmp.heading += row['BL_DESC_EN']
+
+                # ----------------------#
+                # Create Corporate Body # --> link to EU Budget
+                # ----------------------#
+
+                # we will link to URI directly.
+                # To check how to insert the relevant information
+
 
         print('\t\t\t\t\t ... Done.')
 
