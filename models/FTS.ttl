@@ -1,7 +1,7 @@
-@prefix : <http://data.europa.eu/ftspilot##> .
+@prefix : <http://data.europa.eu/fts/> .
 @prefix bud: <http://data.europa.eu/3rx#> .
 @prefix dct: <http://purl.org/dc/terms/> .
-@prefix fts: <http://data.europa.eu/ftspilot#> .
+@prefix fts: <http://data.europa.eu/fts/def/> .
 @prefix org: <http://www.w3.org/ns/org#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -16,9 +16,9 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
-@base <http://data.europa.eu/ftspilot#> .
+@base <http://data.europa.eu/fts/> .
 
-<http://data.europa.eu/ftspilot#> rdf:type owl:Ontology ;
+<http://data.europa.eu/fts/> rdf:type owl:Ontology ;
                                    dct:type <http://purl.org/adms/assettype/Ontology> ;
                                    vann:preferredNamespacePrefix "fts" ;
                                    owl:versionInfo "1.00"^^xsd:string ;
@@ -27,7 +27,7 @@
                                    dct:status <http://purl.org/adms/status/UnderDevelopment> ;
                                    dct:contributor <http://publications.europa.eu/resource/authority/corporate-body/BUDG> ;
                                    dct:creator <http://publications.europa.eu/resource/authority/corporate-body/DIGIT> ;
-                                   vann:preferredNamespaceUri "http://data.europa.eu/ftspilot#" ;
+                                   vann:preferredNamespaceUri "http://data.europa.eu/fts/" ;
                                    dct:created "2018-02-27"^^xsd:date ;
                                    dct:description "The FTS Pilot Vocabulary models the FTS data until 2016 as Linked Open Data"@en .
 
@@ -111,7 +111,7 @@ skos:definition rdf:type owl:AnnotationProperty .
                                      rdfs:range skos:Concept .
 
 
-###  http://data.europa.eu/ftspilot#actionType
+###  http://data.europa.eu/fts/actionType
 fts:actionType rdf:type owl:ObjectProperty ;
                rdfs:domain fts:BudgetaryCommitment ;
                rdfs:range skos:Concept ;
@@ -119,7 +119,7 @@ fts:actionType rdf:type owl:ObjectProperty ;
                rdfs:label "action Type"@en .
 
 
-###  http://data.europa.eu/ftspilot#commitmentKey
+###  http://data.europa.eu/fts/commitmentKey
 fts:commitmentKey rdf:type owl:ObjectProperty ;
                   rdfs:subPropertyOf adms:identifier ;
                   rdfs:domain fts:BudgetaryCommitment ;
@@ -128,7 +128,7 @@ fts:commitmentKey rdf:type owl:ObjectProperty ;
                   rdfs:label "commitment Key"@en .
 
 
-###  http://data.europa.eu/ftspilot#committedBy
+###  http://data.europa.eu/fts/committedBy
 fts:committedBy rdf:type owl:ObjectProperty ;
                 rdfs:domain fts:IndicativeTransaction ;
                 rdfs:range skos:Concept ;
@@ -136,7 +136,7 @@ fts:committedBy rdf:type owl:ObjectProperty ;
                 rdfs:label "committed By"@en .
 
 
-###  http://data.europa.eu/ftspilot#committedTo
+###  http://data.europa.eu/fts/committedTo
 fts:committedTo rdf:type owl:ObjectProperty ;
                 rdfs:domain fts:IndicativeTransaction ;
                 rdfs:range fts:Recipient ;
@@ -144,7 +144,7 @@ fts:committedTo rdf:type owl:ObjectProperty ;
                 rdfs:label "committed To"@en .
 
 
-###  http://data.europa.eu/ftspilot#expenseType
+###  http://data.europa.eu/fts/expenseType
 fts:expenseType rdf:type owl:ObjectProperty ;
                 rdfs:domain fts:BudgetaryCommitment ;
                 rdfs:range skos:Concept ;
@@ -152,7 +152,7 @@ fts:expenseType rdf:type owl:ObjectProperty ;
                 rdfs:label "expense Type"@en .
 
 
-###  http://data.europa.eu/ftspilot#financialManagementArea
+###  http://data.europa.eu/fts/financialManagementArea
 fts:financialManagementArea rdf:type owl:ObjectProperty ;
                             rdfs:domain fts:BudgetaryCommitment ;
                             rdfs:range skos:Concept ;
@@ -160,7 +160,7 @@ fts:financialManagementArea rdf:type owl:ObjectProperty ;
                             rdfs:label "financial Management Area"@en .
 
 
-###  http://data.europa.eu/ftspilot#hasActionLocation
+###  http://data.europa.eu/fts/hasActionLocation
 fts:hasActionLocation rdf:type owl:ObjectProperty ;
                       rdfs:domain fts:LegalCommitment ;
                       rdfs:range dct:Location ;
@@ -168,7 +168,7 @@ fts:hasActionLocation rdf:type owl:ObjectProperty ;
                       rdfs:label "has Action Location"@en .
 
 
-###  http://data.europa.eu/ftspilot#hasBudgetLine
+###  http://data.europa.eu/fts/hasBudgetLine
 fts:hasBudgetLine rdf:type owl:ObjectProperty ;
                   rdfs:domain fts:BudgetaryCommitment ;
                   rdfs:range <http://data.europa.eu/bud#Nomenclature> ;
@@ -176,7 +176,7 @@ fts:hasBudgetLine rdf:type owl:ObjectProperty ;
                   rdfs:label "has Budget Line"@en .
 
 
-###  http://data.europa.eu/ftspilot#hasCoordinator
+###  http://data.europa.eu/fts/hasCoordinator
 fts:hasCoordinator rdf:type owl:ObjectProperty ;
                    rdfs:domain fts:LegalCommitment ;
                    rdfs:range fts:Recipient ;
@@ -184,7 +184,7 @@ fts:hasCoordinator rdf:type owl:ObjectProperty ;
                    rdfs:label "has Coordinator"@en .
 
 
-###  http://data.europa.eu/ftspilot#hasEstimatedValue
+###  http://data.europa.eu/fts/hasEstimatedValue
 fts:hasEstimatedValue rdf:type owl:ObjectProperty ;
                       rdfs:domain fts:IndicativeTransaction ;
                       rdfs:range <http://data.europa.eu/bud#MonetaryValue> ;
@@ -192,7 +192,7 @@ fts:hasEstimatedValue rdf:type owl:ObjectProperty ;
                       rdfs:label "has Estimated Value"@en .
 
 
-###  http://data.europa.eu/ftspilot#hasIndicativeTransaction
+###  http://data.europa.eu/fts/hasIndicativeTransaction
 fts:hasIndicativeTransaction rdf:type owl:ObjectProperty ;
                              rdfs:domain fts:BudgetaryCommitment ;
                              rdfs:range fts:IndicativeTransaction ;
@@ -200,7 +200,7 @@ fts:hasIndicativeTransaction rdf:type owl:ObjectProperty ;
                              rdfs:label "has Indicative Transaction"@en .
 
 
-###  http://data.europa.eu/ftspilot#hasLegalCommitment
+###  http://data.europa.eu/fts/hasLegalCommitment
 fts:hasLegalCommitment rdf:type owl:ObjectProperty ;
                        rdfs:domain fts:BudgetaryCommitment ;
                        rdfs:range fts:LegalCommitment ;
@@ -208,7 +208,7 @@ fts:hasLegalCommitment rdf:type owl:ObjectProperty ;
                        rdfs:label "has Legal Commitment"@en .
 
 
-###  http://data.europa.eu/ftspilot#hasLocation
+###  http://data.europa.eu/fts/hasLocation
 fts:hasLocation rdf:type owl:ObjectProperty ;
                 rdfs:domain fts:Recipient ;
                 rdfs:range dct:Location ;
@@ -216,7 +216,7 @@ fts:hasLocation rdf:type owl:ObjectProperty ;
                 rdfs:label "has Location"@en .
 
 
-###  http://data.europa.eu/ftspilot#hasTotalValue
+###  http://data.europa.eu/fts/hasTotalValue
 fts:hasTotalValue rdf:type owl:ObjectProperty ;
                   rdfs:domain fts:BudgetaryCommitment ;
                   rdfs:range <http://data.europa.eu/bud#MonetaryValue> ;
@@ -224,7 +224,7 @@ fts:hasTotalValue rdf:type owl:ObjectProperty ;
                   rdfs:label "has Total Value"@en .
 
 
-###  http://data.europa.eu/ftspilot#positionKey
+###  http://data.europa.eu/fts/positionKey
 fts:positionKey rdf:type owl:ObjectProperty ;
                 rdfs:subPropertyOf adms:identifier ;
                 rdfs:domain fts:BudgetaryCommitment ;
@@ -307,7 +307,7 @@ rov:registration rdf:type owl:ObjectProperty ;
                                   rdfs:range xsd:string .
 
 
-###  http://data.europa.eu/ftspilot#fundingType
+###  http://data.europa.eu/fts/fundingType
 fts:fundingType rdf:type owl:DatatypeProperty ;
                 rdfs:domain fts:LegalCommitment ;
                 rdfs:range rdfs:Literal ;
@@ -404,21 +404,21 @@ foaf:familyName rdf:type owl:DatatypeProperty ;
                                          rdfs:seeAlso "https://joinup.ec.europa.eu/node/151960/"^^xsd:anyURI .
 
 
-###  http://data.europa.eu/ftspilot#BudgetaryCommitment
+###  http://data.europa.eu/fts/BudgetaryCommitment
 fts:BudgetaryCommitment rdf:type owl:Class ;
                         rdfs:comment "The budgetary commitment is the operation reserving the appropriation necessary to cover subsequent payments to honour a legal commitment."@en ;
                         rdfs:label "Budgetary Commitment"@en ;
                         rdfs:seeAlso "http://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:62008TJ0465&from=EN"^^xsd:anyURI .
 
 
-###  http://data.europa.eu/ftspilot#IndicativeTransaction
+###  http://data.europa.eu/fts/IndicativeTransaction
 fts:IndicativeTransaction rdf:type owl:Class ;
                           rdfs:comment "'Indicative transactions’ in the FTS data are not actual transactions, but estimations or provisions for such transactions, which will be only executed once the involved parties have fulfilled their contractual and legal obligations. The value of the transaction is often an estimate and the sources may vary: actual payments, contract values, estimated repartitions of contract values, etc."@en ;
                           rdfs:label "Indicative Transaction"@en ;
                           rdfs:seeAlso "http://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L:2011:048:FULL&from=EN"^^xsd:anyURI .
 
 
-###  http://data.europa.eu/ftspilot#InternationalOrganization
+###  http://data.europa.eu/fts/InternationalOrganization
 fts:InternationalOrganization rdf:type owl:Class ;
                               rdfs:subClassOf org:FormalOrganization ;
                               rdfs:comment "“international organization” means an organization established by a treaty or other instrument governed by international law and possessing its own international legal personality"@en ;
@@ -426,14 +426,14 @@ fts:InternationalOrganization rdf:type owl:Class ;
                               rdfs:seeAlso "http://legal.un.org/ilc/texts/instruments/english/commentaries/9_11_2011.pdf"^^xsd:anyURI .
 
 
-###  http://data.europa.eu/ftspilot#LegalCommitment
+###  http://data.europa.eu/fts/LegalCommitment
 fts:LegalCommitment rdf:type owl:Class ;
                     rdfs:comment "A legal commitment is the act whereby the authorising officer enters into or establishes an obligation which results in a charge."@en ;
                     rdfs:label "Legal Commitment"@en ;
                     rdfs:seeAlso "http://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32002R1605&from=EN"^^xsd:anyURI .
 
 
-###  http://data.europa.eu/ftspilot#NGO
+###  http://data.europa.eu/fts/NGO
 fts:NGO rdf:type owl:Class ;
         rdfs:subClassOf fts:NonProfitOrganisation ;
         rdfs:comment "A non-governmental organization (NGO) is any non-profit, voluntary citizens' group which is organized on a local, national or international level"@en ;
@@ -441,7 +441,7 @@ fts:NGO rdf:type owl:Class ;
         rdfs:seeAlso "http://www.ngo.org/ngoinfo/define.html"^^xsd:anyURI .
 
 
-###  http://data.europa.eu/ftspilot#NonProfitOrganisation
+###  http://data.europa.eu/fts/NonProfitOrganisation
 fts:NonProfitOrganisation rdf:type owl:Class ;
                           rdfs:subClassOf org:FormalOrganization ;
                           rdfs:comment "A corporation or an association that conducts business for the benefit of the general public without shareholders and without a profit motive"@en ;
@@ -449,7 +449,7 @@ fts:NonProfitOrganisation rdf:type owl:Class ;
                           rdfs:seeAlso "https://legal-dictionary.thefreedictionary.com/Non-profit+organization"^^xsd:anyURI .
 
 
-###  http://data.europa.eu/ftspilot#Recipient
+###  http://data.europa.eu/fts/Recipient
 fts:Recipient rdf:type owl:Class ;
               rdfs:subClassOf foaf:Agent ;
               rdfs:comment "A country, beneficiary, contractor, or any natural or legal person that receives prizes or funds under a financial instrument . Beneficiary means a natural or legal person with whom a grant agreement has been signed or to whom a grant decision has been notified. Contractor means a natural or legal person with whom a procurement contract has been concluded."@en ;
@@ -457,7 +457,7 @@ fts:Recipient rdf:type owl:Class ;
               rdfs:seeAlso "http://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32012R0966&from=EN"^^xsd:anyURI .
 
 
-###  http://data.europa.eu/ftspilot#TrustFund
+###  http://data.europa.eu/fts/TrustFund
 fts:TrustFund rdf:type owl:Class ;
               rdfs:subClassOf org:FormalOrganization ;
               rdfs:comment "A Trust Fund is an innovative mechanism under the EU’s Financial Regulation used in the field of development cooperation to pool large resources from different donors to enable a swift, common, complementary and flexible response to the different dimensions of an emergency situation"@en ;

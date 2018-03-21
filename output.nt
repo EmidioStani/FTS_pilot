@@ -1,64 +1,78 @@
-<http://fts.example.com/Address/Nqqerff0-1521554404152> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/locn#Address> .
-<http://fts.example.com/Address/Nqqerff0-1521554404152> <http://www.w3.org/ns/locn#adminUnitL1> "Spain" .
-<http://fts.example.com/Address/Nqqerff0-1521554404152> <http://www.w3.org/ns/locn#fullAddress> "CALLE SAN FRANCISCO 3" .
-<http://fts.example.com/Address/Nqqerff0-1521554404152> <http://www.w3.org/ns/locn#postName> "OVIEDO" .
-<http://fts.example.com/Address/Nqqerff0-1521554404152> <http://www.w3.org/ns/locn#postCode> "33003" .
-<http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba0-1521554404158> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/dc/terms/Location> .
-<http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba0-1521554404158> <http://www.w3.org/ns/locn#geographicName> "UNIVERSIDAD DE OVIEDO*UNIOVI, OVIEDO, Spain" .
-<http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba0-1521554404158> <http://www.w3.org/ns/locn#address> <http://fts.example.com/Address/Nqqerff0-1521554404152> .
-<http://fts.example.com/Recipient/Erpvcvrag0-1521554404170> <http://www.w3.org/2004/02/skos/core#prefLabel> "UNIVERSIDAD DE OVIEDO*UNIOVI" .
-<http://fts.example.com/Recipient/Erpvcvrag0-1521554404170> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#Recipient> .
-<http://fts.example.com/Recipient/Erpvcvrag0-1521554404170> <http://data.europa.eu/ftspilot#hasLocation> <http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba0-1521554404158> .
-<http://fts.example.com/Recipient/Erpvcvrag0-1521554404170> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/m8g/PublicOrganisation> .
-<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag0-1521554404204> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#LegalCommitment> .
-<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag0-1521554404204> <http://data.europa.eu/ftspilot#hasCoordinator> <http://fts.example.com/Recipient/Erpvcvrag0-1521554404170> .
-<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag0-1521554404204> <http://purl.org/dc/terms/description> "JOINT MASTERS PROGRAMMES : EMECC NURSING - EMERGENCY AND CRITICAL CARE NURSING " .
-<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag0-1521554404204> <http://data.europa.eu/ftspilot#fundingType> "GRT" .
-<http://fts.example.com/MonetaryValue/ZbargnelInyhr0-1521554404208> <http://data.europa.eu/bud#value> "104997.0" .
-<http://fts.example.com/MonetaryValue/ZbargnelInyhr0-1521554404208> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/bud#MonetaryValue> .
-<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba0-1521554404214> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#IndicativeTransaction> .
-<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba0-1521554404214> <http://data.europa.eu/ftspilot#committedTo> <http://fts.example.com/Recipient/Erpvcvrag0-1521554404170> .
-<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba0-1521554404214> <http://data.europa.eu/ftspilot#hasEstimatedValue> <http://fts.example.com/MonetaryValue/ZbargnelInyhr0-1521554404208> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521554404222> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#BudgetaryCommitment> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521554404222> <http://data.europa.eu/ftspilot#hasIndicativeTransaction> <http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba0-1521554404214> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521554404222> <http://data.europa.eu/ftspilot#hasTotalValue> <http://fts.example.com/MonetaryValue/ZbargnelInyhr0-1521554404208> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521554404222> <http://data.europa.eu/ftspilot#commitmentKey> <http://fts.example.com/Identifier/cbfvgvbaXrl0-1521554404229> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521554404222> <http://data.europa.eu/ftspilot#positionKey> <http://fts.example.com/Identifier/cbfvgvbaXrl0-1521554404229> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521554404222> <http://data.europa.eu/ftspilot#hasLegalCommitment> <http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag0-1521554404204> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521554404222> <http://purl.org/dc/terms/date> "2016" .
-<http://fts.example.com/Identifier/cbfvgvbaXrl0-1521554404229> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/adms#Identifier> .
-<http://fts.example.com/Nomenclature/Abzrapyngher0-1521554404240> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/bud#Nomenclature> .
-<http://fts.example.com/Nomenclature/Abzrapyngher0-1521554404240> <http://data.europa.eu/bud#heading> "Various intra ACP, other programmed sectors" .
-<http://fts.example.com/Nomenclature/Abzrapyngher0-1521554404240> <http://data.europa.eu/bud#alias> "04.20.65" .
-<http://fts.example.com/Address/Nqqerff1-1521554404244> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/locn#Address> .
-<http://fts.example.com/Address/Nqqerff1-1521554404244> <http://www.w3.org/ns/locn#adminUnitL1> "France" .
-<http://fts.example.com/Address/Nqqerff1-1521554404244> <http://www.w3.org/ns/locn#fullAddress> "PARVIS RENE DESCARTES 15" .
-<http://fts.example.com/Address/Nqqerff1-1521554404244> <http://www.w3.org/ns/locn#postName> "LYON" .
-<http://fts.example.com/Address/Nqqerff1-1521554404244> <http://www.w3.org/ns/locn#postCode> "69342" .
-<http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba1-1521554404249> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/dc/terms/Location> .
-<http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba1-1521554404249> <http://www.w3.org/ns/locn#geographicName> "ECOLE NORMALE SUPERIEURE DE LYON*ENS DE LYON, LYON, France" .
-<http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba1-1521554404249> <http://www.w3.org/ns/locn#address> <http://fts.example.com/Address/Nqqerff1-1521554404244> .
-<http://fts.example.com/Recipient/Erpvcvrag1-1521554404258> <http://www.w3.org/2004/02/skos/core#prefLabel> "ECOLE NORMALE SUPERIEURE DE LYON*ENS DE LYON" .
-<http://fts.example.com/Recipient/Erpvcvrag1-1521554404258> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#Recipient> .
-<http://fts.example.com/Recipient/Erpvcvrag1-1521554404258> <http://data.europa.eu/ftspilot#hasLocation> <http://fts.example.com/http://purl.org/dc/terms/Location/Ybpngvba1-1521554404249> .
-<http://fts.example.com/Recipient/Erpvcvrag1-1521554404258> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/m8g/PublicOrganisation> .
-<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag1-1521554404280> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#LegalCommitment> .
-<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag1-1521554404280> <http://data.europa.eu/ftspilot#hasCoordinator> <http://fts.example.com/Recipient/Erpvcvrag1-1521554404258> .
-<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag1-1521554404280> <http://purl.org/dc/terms/description> "JOINT MASTERS PROGRAMMES : ATOMIC SCALE MODELLING OF PHYSICAL, CHEMICAL AND BIO-MOLECULAR SYSTEMS" .
-<http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag1-1521554404280> <http://data.europa.eu/ftspilot#fundingType> "GRT" .
-<http://fts.example.com/MonetaryValue/ZbargnelInyhr1-1521554404285> <http://data.europa.eu/bud#value> "47000.0" .
-<http://fts.example.com/MonetaryValue/ZbargnelInyhr1-1521554404285> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/bud#MonetaryValue> .
-<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba1-1521554404294> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#IndicativeTransaction> .
-<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba1-1521554404294> <http://data.europa.eu/ftspilot#committedTo> <http://fts.example.com/Recipient/Erpvcvrag1-1521554404258> .
-<http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba1-1521554404294> <http://data.europa.eu/ftspilot#hasEstimatedValue> <http://fts.example.com/MonetaryValue/ZbargnelInyhr1-1521554404285> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521554404299> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/ftspilot#BudgetaryCommitment> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521554404299> <http://data.europa.eu/ftspilot#hasIndicativeTransaction> <http://fts.example.com/IndicativeTransaction/VaqvpngvirGenafnpgvba1-1521554404294> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521554404299> <http://data.europa.eu/ftspilot#hasTotalValue> <http://fts.example.com/MonetaryValue/ZbargnelInyhr1-1521554404285> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521554404299> <http://data.europa.eu/ftspilot#commitmentKey> <http://fts.example.com/Identifier/cbfvgvbaXrl1-1521554404302> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521554404299> <http://data.europa.eu/ftspilot#positionKey> <http://fts.example.com/Identifier/cbfvgvbaXrl1-1521554404302> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521554404299> <http://data.europa.eu/ftspilot#hasLegalCommitment> <http://fts.example.com/LegalCommitment/YrtnyPbzzvgzrag1-1521554404280> .
-<http://fts.example.com/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521554404299> <http://purl.org/dc/terms/date> "2016" .
-<http://fts.example.com/Identifier/cbfvgvbaXrl1-1521554404302> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/adms#Identifier> .
-<http://fts.example.com/Nomenclature/Abzrapyngher1-1521554404311> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/bud#Nomenclature> .
-<http://fts.example.com/Nomenclature/Abzrapyngher1-1521554404311> <http://data.europa.eu/bud#heading> "Various intra ACP, other programmed sectors" .
-<http://fts.example.com/Nomenclature/Abzrapyngher1-1521554404311> <http://data.europa.eu/bud#alias> "04.20.65" .
+<http://fts.example.com/id/Address/Nqqerff0-1521651713364> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/locn#Address> .
+<http://fts.example.com/id/Address/Nqqerff0-1521651713364> <http://www.w3.org/ns/locn#adminUnitL1> <http://publications.europa.eu/resource/authority/country/ESP> .
+<http://fts.example.com/id/Address/Nqqerff0-1521651713364> <http://www.w3.org/ns/locn#postName> "OVIEDO" .
+<http://fts.example.com/id/Address/Nqqerff0-1521651713364> <http://www.w3.org/ns/locn#fullAddress> "CALLE SAN FRANCISCO 3" .
+<http://fts.example.com/id/Address/Nqqerff0-1521651713364> <http://www.w3.org/ns/locn#postCode> "33003" .
+<http://fts.example.com/id/Location/Ybpngvba0-1521651713364> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/dc/terms/Location> .
+<http://fts.example.com/id/Location/Ybpngvba0-1521651713364> <http://www.w3.org/ns/locn#geographicName> "UNIVERSIDAD DE OVIEDO*UNIOVI, OVIEDO, Spain" .
+<http://fts.example.com/id/Location/Ybpngvba0-1521651713364> <http://www.w3.org/ns/locn#address> <http://fts.example.com/id/Address/Nqqerff0-1521651713364> .
+<http://fts.example.com/id/Recipient/Erpvcvrag0-1521651713365> <http://www.w3.org/2004/02/skos/core#prefLabel> "UNIVERSIDAD DE OVIEDO*UNIOVI" .
+<http://fts.example.com/id/Recipient/Erpvcvrag0-1521651713365> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/fts/def/Recipient> .
+<http://fts.example.com/id/Recipient/Erpvcvrag0-1521651713365> <http://data.europa.eu/fts/def/hasLocation> <http://fts.example.com/id/Location/Ybpngvba0-1521651713364> .
+<http://fts.example.com/id/Recipient/Erpvcvrag0-1521651713365> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/m8g/PublicOrganisation> .
+<http://fts.example.com/id/LegalCommitment/YrtnyPbzzvgzrag0-1521651713366> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/fts/def/LegalCommitment> .
+<http://fts.example.com/id/LegalCommitment/YrtnyPbzzvgzrag0-1521651713366> <http://purl.org/dc/terms/description> "JOINT MASTERS PROGRAMMES : EMECC NURSING - EMERGENCY AND CRITICAL CARE NURSING " .
+<http://fts.example.com/id/LegalCommitment/YrtnyPbzzvgzrag0-1521651713366> <http://data.europa.eu/fts/def/hasCoordinator> <http://fts.example.com/id/Recipient/Erpvcvrag0-1521651713365> .
+<http://fts.example.com/id/LegalCommitment/YrtnyPbzzvgzrag0-1521651713366> <http://data.europa.eu/fts/def/fundingType> "GRT" .
+<http://fts.example.com/id/LegalCommitment/YrtnyPbzzvgzrag0-1521651713366> <http://data.europa.eu/fts/def/hasActionLocation> <http://fts.example.com/id/Location/Ybpngvba0-1521651713364> .
+<http://fts.example.com/id/MonetaryValue/ZbargnelInyhr0-1521651713366> <http://data.europa.eu/bud#value> "104997.0" .
+<http://fts.example.com/id/MonetaryValue/ZbargnelInyhr0-1521651713366> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/bud#MonetaryValue> .
+<http://fts.example.com/id/MonetaryValue/ZbargnelInyhr0-1521651713366> <http://data.europa.eu/bud#currency> <http://publications.europa.eu/resource/authority/currency/EUR> .
+<http://fts.example.com/id/IndicativeTransaction/VaqvpngvirGenafnpgvba0-1521651713366> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/fts/def/IndicativeTransaction> .
+<http://fts.example.com/id/IndicativeTransaction/VaqvpngvirGenafnpgvba0-1521651713366> <http://data.europa.eu/fts/def/hasEstimatedValue> <http://fts.example.com/id/MonetaryValue/ZbargnelInyhr0-1521651713366> .
+<http://fts.example.com/id/IndicativeTransaction/VaqvpngvirGenafnpgvba0-1521651713366> <http://data.europa.eu/fts/def/committedBy> <http://publications.europa.eu/resource/authority/corporate-body/DEVCO> .
+<http://fts.example.com/id/IndicativeTransaction/VaqvpngvirGenafnpgvba0-1521651713366> <http://data.europa.eu/fts/def/committedTo> <http://fts.example.com/id/Recipient/Erpvcvrag0-1521651713365> .
+<http://fts.example.com/id/Identifier/cbfvgvbaXrl0-1521651713367> <http://www.w3.org/2000/01/rdf-schema#label> "AID.41709.1" .
+<http://fts.example.com/id/Identifier/cbfvgvbaXrl0-1521651713367> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/adms#Identifier> .
+<http://fts.example.com/id/Identifier/pbzzvgzragXrl0-1521651713367> <http://www.w3.org/2000/01/rdf-schema#label> "AID.41709" .
+<http://fts.example.com/id/Identifier/pbzzvgzragXrl0-1521651713367> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/adms#Identifier> .
+<http://fts.example.com/id/Nomenclature/Abzrapyngher0-1521651713367> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/bud#Nomenclature> .
+<http://fts.example.com/id/Nomenclature/Abzrapyngher0-1521651713367> <http://data.europa.eu/bud#alias> "04.20.65" .
+<http://fts.example.com/id/Nomenclature/Abzrapyngher0-1521651713367> <http://data.europa.eu/bud#heading> "Various intra ACP, other programmed sectors" .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521651713367> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/fts/def/BudgetaryCommitment> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521651713367> <http://data.europa.eu/fts/def/hasLegalCommitment> <http://fts.example.com/id/LegalCommitment/YrtnyPbzzvgzrag0-1521651713366> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521651713367> <http://data.europa.eu/fts/def/hasIndicativeTransaction> <http://fts.example.com/id/IndicativeTransaction/VaqvpngvirGenafnpgvba0-1521651713366> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521651713367> <http://data.europa.eu/fts/def/hasTotalValue> <http://fts.example.com/id/MonetaryValue/ZbargnelInyhr0-1521651713366> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521651713367> <http://data.europa.eu/fts/def/hasBudgetLine> <http://fts.example.com/id/Nomenclature/Abzrapyngher0-1521651713367> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521651713367> <http://data.europa.eu/fts/def/positionKey> <http://fts.example.com/id/Identifier/cbfvgvbaXrl0-1521651713367> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521651713367> <http://data.europa.eu/fts/def/commitmentKey> <http://fts.example.com/id/Identifier/pbzzvgzragXrl0-1521651713367> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag0-1521651713367> <http://purl.org/dc/terms/date> "2016" .
+<http://fts.example.com/id/Address/Nqqerff1-1521651713368> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/locn#Address> .
+<http://fts.example.com/id/Address/Nqqerff1-1521651713368> <http://www.w3.org/ns/locn#adminUnitL1> <http://publications.europa.eu/resource/authority/country/FRA> .
+<http://fts.example.com/id/Address/Nqqerff1-1521651713368> <http://www.w3.org/ns/locn#postName> "LYON" .
+<http://fts.example.com/id/Address/Nqqerff1-1521651713368> <http://www.w3.org/ns/locn#fullAddress> "PARVIS RENE DESCARTES 15" .
+<http://fts.example.com/id/Address/Nqqerff1-1521651713368> <http://www.w3.org/ns/locn#postCode> "69342" .
+<http://fts.example.com/id/Location/Ybpngvba1-1521651713368> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/dc/terms/Location> .
+<http://fts.example.com/id/Location/Ybpngvba1-1521651713368> <http://www.w3.org/ns/locn#geographicName> "ECOLE NORMALE SUPERIEURE DE LYON*ENS DE LYON, LYON, France" .
+<http://fts.example.com/id/Location/Ybpngvba1-1521651713368> <http://www.w3.org/ns/locn#address> <http://fts.example.com/id/Address/Nqqerff1-1521651713368> .
+<http://fts.example.com/id/Recipient/Erpvcvrag1-1521651713368> <http://www.w3.org/2004/02/skos/core#prefLabel> "ECOLE NORMALE SUPERIEURE DE LYON*ENS DE LYON" .
+<http://fts.example.com/id/Recipient/Erpvcvrag1-1521651713368> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/fts/def/Recipient> .
+<http://fts.example.com/id/Recipient/Erpvcvrag1-1521651713368> <http://data.europa.eu/fts/def/hasLocation> <http://fts.example.com/id/Location/Ybpngvba1-1521651713368> .
+<http://fts.example.com/id/Recipient/Erpvcvrag1-1521651713368> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/m8g/PublicOrganisation> .
+<http://fts.example.com/id/LegalCommitment/YrtnyPbzzvgzrag1-1521651713370> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/fts/def/LegalCommitment> .
+<http://fts.example.com/id/LegalCommitment/YrtnyPbzzvgzrag1-1521651713370> <http://purl.org/dc/terms/description> "JOINT MASTERS PROGRAMMES : ATOMIC SCALE MODELLING OF PHYSICAL, CHEMICAL AND BIO-MOLECULAR SYSTEMS" .
+<http://fts.example.com/id/LegalCommitment/YrtnyPbzzvgzrag1-1521651713370> <http://data.europa.eu/fts/def/hasCoordinator> <http://fts.example.com/id/Recipient/Erpvcvrag1-1521651713368> .
+<http://fts.example.com/id/LegalCommitment/YrtnyPbzzvgzrag1-1521651713370> <http://data.europa.eu/fts/def/fundingType> "GRT" .
+<http://fts.example.com/id/LegalCommitment/YrtnyPbzzvgzrag1-1521651713370> <http://data.europa.eu/fts/def/hasActionLocation> <http://fts.example.com/id/Location/Ybpngvba1-1521651713368> .
+<http://fts.example.com/id/MonetaryValue/ZbargnelInyhr1-1521651713370> <http://data.europa.eu/bud#value> "47000.0" .
+<http://fts.example.com/id/MonetaryValue/ZbargnelInyhr1-1521651713370> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/bud#MonetaryValue> .
+<http://fts.example.com/id/MonetaryValue/ZbargnelInyhr1-1521651713370> <http://data.europa.eu/bud#currency> <http://publications.europa.eu/resource/authority/currency/EUR> .
+<http://fts.example.com/id/IndicativeTransaction/VaqvpngvirGenafnpgvba1-1521651713370> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/fts/def/IndicativeTransaction> .
+<http://fts.example.com/id/IndicativeTransaction/VaqvpngvirGenafnpgvba1-1521651713370> <http://data.europa.eu/fts/def/hasEstimatedValue> <http://fts.example.com/id/MonetaryValue/ZbargnelInyhr1-1521651713370> .
+<http://fts.example.com/id/IndicativeTransaction/VaqvpngvirGenafnpgvba1-1521651713370> <http://data.europa.eu/fts/def/committedBy> <http://publications.europa.eu/resource/authority/corporate-body/DEVCO> .
+<http://fts.example.com/id/IndicativeTransaction/VaqvpngvirGenafnpgvba1-1521651713370> <http://data.europa.eu/fts/def/committedTo> <http://fts.example.com/id/Recipient/Erpvcvrag1-1521651713368> .
+<http://fts.example.com/id/Identifier/cbfvgvbaXrl1-1521651713370> <http://www.w3.org/2000/01/rdf-schema#label> "AID.41716.1" .
+<http://fts.example.com/id/Identifier/cbfvgvbaXrl1-1521651713370> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/adms#Identifier> .
+<http://fts.example.com/id/Identifier/pbzzvgzragXrl1-1521651713370> <http://www.w3.org/2000/01/rdf-schema#label> "AID.41716" .
+<http://fts.example.com/id/Identifier/pbzzvgzragXrl1-1521651713370> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/adms#Identifier> .
+<http://fts.example.com/id/Nomenclature/Abzrapyngher1-1521651713371> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/bud#Nomenclature> .
+<http://fts.example.com/id/Nomenclature/Abzrapyngher1-1521651713371> <http://data.europa.eu/bud#alias> "04.20.65" .
+<http://fts.example.com/id/Nomenclature/Abzrapyngher1-1521651713371> <http://data.europa.eu/bud#heading> "Various intra ACP, other programmed sectors" .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521651713371> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.europa.eu/fts/def/BudgetaryCommitment> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521651713371> <http://data.europa.eu/fts/def/hasLegalCommitment> <http://fts.example.com/id/LegalCommitment/YrtnyPbzzvgzrag1-1521651713370> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521651713371> <http://data.europa.eu/fts/def/hasIndicativeTransaction> <http://fts.example.com/id/IndicativeTransaction/VaqvpngvirGenafnpgvba1-1521651713370> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521651713371> <http://data.europa.eu/fts/def/hasTotalValue> <http://fts.example.com/id/MonetaryValue/ZbargnelInyhr1-1521651713370> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521651713371> <http://data.europa.eu/fts/def/hasBudgetLine> <http://fts.example.com/id/Nomenclature/Abzrapyngher1-1521651713371> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521651713371> <http://data.europa.eu/fts/def/positionKey> <http://fts.example.com/id/Identifier/cbfvgvbaXrl1-1521651713370> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521651713371> <http://data.europa.eu/fts/def/commitmentKey> <http://fts.example.com/id/Identifier/pbzzvgzragXrl1-1521651713370> .
+<http://fts.example.com/id/BudgetaryCommitment/OhqtrgnelPbzzvgzrag1-1521651713371> <http://purl.org/dc/terms/date> "2016" .
