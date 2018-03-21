@@ -1,4 +1,4 @@
-@prefix : <http://data.europa.eu/ftspilot#> .
+@prefix : <http://data.europa.eu/ftspilot##> .
 @prefix bud: <http://data.europa.eu/3rx#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix fts: <http://data.europa.eu/ftspilot#> .
@@ -16,18 +16,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
-@base <http://data.europa.eu/ftspilot> .
+@base <http://data.europa.eu/ftspilot#> .
 
-<http://data.europa.eu/ftspilot> rdf:type owl:Ontology ;
-                                  dct:type <http://purl.org/adms/assettype/Ontology> ;
-                                  vann:preferredNamespacePrefix "fts" ;
-                                  dct:publisher <http://publications.europa.eu/resource/authority/corporate-body/DIGIT> ;
-                                  dct:title "Financial Transparency System Pilot Vocabulary"@en ;
-                                  dct:status <http://purl.org/adms/status/UnderDevelopment> ;
-                                  dct:contributor <http://publications.europa.eu/resource/authority/corporate-body/BUDG> ;
-                                  dct:creator <http://publications.europa.eu/resource/authority/corporate-body/DIGIT> ;
-                                  dct:created "2018-02-27"^^xsd:date ;
-                                  dct:description "The FTS Pilot Vocabulary models the FTS data until 2016 as Linked Open Data"@en .
+<http://data.europa.eu/ftspilot#> rdf:type owl:Ontology ;
+                                   dct:type <http://purl.org/adms/assettype/Ontology> ;
+                                   vann:preferredNamespacePrefix "fts" ;
+                                   owl:versionInfo "1.00"^^xsd:string ;
+                                   dct:publisher <http://publications.europa.eu/resource/authority/corporate-body/DIGIT> ;
+                                   dct:title "Financial Transparency System Pilot Vocabulary"@en ;
+                                   dct:status <http://purl.org/adms/status/UnderDevelopment> ;
+                                   dct:contributor <http://publications.europa.eu/resource/authority/corporate-body/BUDG> ;
+                                   dct:creator <http://publications.europa.eu/resource/authority/corporate-body/DIGIT> ;
+                                   vann:preferredNamespaceUri "http://data.europa.eu/ftspilot#" ;
+                                   dct:created "2018-02-27"^^xsd:date ;
+                                   dct:description "The FTS Pilot Vocabulary models the FTS data until 2016 as Linked Open Data"@en .
 
 #################################################################
 #    Annotation properties
@@ -67,6 +69,20 @@ dct:hasVersion rdf:type owl:AnnotationProperty .
 
 ###  http://purl.org/dc/terms/identifier
 dct:identifier rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/vocab/vann/preferredNamespacePrefix
+vann:preferredNamespacePrefix rdf:type owl:AnnotationProperty ;
+                              rdfs:comment "The preferred namespace prefix to use when using terms from this vocabulary in an XML document."@en ;
+                              rdfs:isDefinedBy vann: ;
+                              rdfs:label "Preferred Namespace Prefix"@en .
+
+
+###  http://purl.org/vocab/vann/preferredNamespaceUri
+vann:preferredNamespaceUri rdf:type owl:AnnotationProperty ;
+                           rdfs:comment "The preferred namespace URI to use when using terms from this vocabulary in an XML document."@en ;
+                           rdfs:isDefinedBy vann: ;
+                           rdfs:label "Preferred Namespace Uri"@en .
 
 
 ###  http://purl.org/vocab/vann/usageNote
@@ -226,7 +242,7 @@ adms:identifier rdf:type owl:ObjectProperty .
                                     rdfs:range <http://www.w3.org/ns/locn#Address> ;
                                     dct:identifier "locn:address"@en ;
                                     vann:usageNote "A property to link a public organization to its address. For consistency with INSPIRE, the Location Core Vocabulary's Address class should be used."@en ;
-                                    rdfs:comment "The locn:address property relationship associates any resource with the <a href=\"#locn:Address\">Address</a> Class "^^rdf:XMLLiteral ;
+                                    rdfs:comment "The locn:address property relationship associates any resource with the <a href=\"#locn:Address\">Address</a> Class" ;
                                     rdfs:isDefinedBy <http://www.w3.org/ns/locn#> ;
                                     rdfs:label " address"@en ,
                                                "address"@en .
@@ -234,11 +250,12 @@ adms:identifier rdf:type owl:ObjectProperty .
 
 ###  http://www.w3.org/ns/locn#adminUnitL1
 <http://www.w3.org/ns/locn#adminUnitL1> rdf:type owl:ObjectProperty ;
+                                        rdfs:subPropertyOf org:classification ;
                                         rdfs:domain <http://www.w3.org/ns/locn#Address> ;
                                         dct:identifier "locn:adminUnitL1"@en ,
                                                        "urn:x-inspire:specification:gmlas:BaseTypes:3.2:adminUnit"@en ;
                                         vann:usageNote "Best practice is to use the ISO 3166-1 code but if this is inappropriate for the context, country names should be provided in a consistent manner to reduce ambiguity. For example, either write 'United Kingdom' or 'UK' consistently throughout the data set and avoid mixing the two.    "@en ;
-                                        rdfs:comment "The uppermost administrative unit for the address, almost always a country. The domain of locn:adminUnitL1 is locn:Address and the range is a literal, conceptually defined by the <a href=\"https://inspire-twg.jrc.ec.europa.eu/inspire-fc.html#_C2612\">INSPIRE Geographical Name data type</a>."^^rdf:XMLLiteral ;
+                                        rdfs:comment "The uppermost administrative unit for the address, almost always a country. The domain of locn:adminUnitL1 is locn:Address and the range is a literal, conceptually defined by the <a href=\"https://inspire-twg.jrc.ec.europa.eu/inspire-fc.html#_C2612\">INSPIRE Geographical Name data type</a>." ;
                                         rdfs:isDefinedBy <http://www.w3.org/ns/locn#> ;
                                         rdfs:label "admin unit level 1"@en .
 
@@ -321,7 +338,7 @@ skos:prefLabel rdf:type owl:DatatypeProperty ;
                                            dct:identifier "locn:geographicName"@en ;
                                            rdfs:comment """<p>A geographic name is a proper noun applied to a spatial object. Taking the example used in the <a href=\"http://inspire.jrc.ec.europa.eu/documents/Data_Specifications/INSPIRE_DataSpecification_GN_v3.0.1.pdf\">INSPIRE document</a> (page 18), the following are all valid geographic names for the Greek capital:</p>
     <ul><li>A?n?a (the Greek endonym written in the Greek script)</li><li>Athína (the standard Romanisation of the endonym)</li><li>Athens (the English language exonym)</li></ul>
-    <p>For INSPIRE-conformant data, provide the metadata for the geographic name using a skos:Concept as a datatype.</p>"""^^rdf:XMLLiteral ;
+    <p>For INSPIRE-conformant data, provide the metadata for the geographic name using a skos:Concept as a datatype.</p>""" ;
                                            rdfs:isDefinedBy <http://www.w3.org/ns/locn#> ;
                                            rdfs:label "geographic name"@en ;
                                            <http://www.w3.org/2007/05/powder-s#describedby> <https://joinup.ec.europa.eu/system/files/project/Core_Vocabularies-Business_Location_Person-Specification-v0.3_0.zip> .
@@ -474,7 +491,7 @@ skos:Concept rdf:type owl:Class ;
 ###  http://www.w3.org/ns/adms#Identifier
 adms:Identifier rdf:type owl:Class ;
                 dct:identifier "adms:Identifier" ;
-                rdfs:comment "This class is based on the UN/CEFACT Identifier complex type defined in See Section 5.8 of Core Components Data Type Catalogue Version 3.1 (http://www.unece.org/fileadmin/DAM/cefact/codesfortrade/CCTS/CCTS-DTCatalogueVersion3p1.pdf) In RDF this is expressed using the following properties: - the content string should be provided using skos:notation, datatyped with the identifier scheme (inclduing the version number if appropriate); - use dcterms:creator to link to a class describing the agency that manages the identifier scheme or adms:schemaAgency to provide the name as a literal. Although not part of the ADMS conceptual model, it may be useful to provide further properties to the Identifier class such as dcterms:created to provide the date on which the identifier was issued."^^rdf:XMLLiteral ;
+                rdfs:comment "This class is based on the UN/CEFACT Identifier complex type defined in See Section 5.8 of Core Components Data Type Catalogue Version 3.1 (http://www.unece.org/fileadmin/DAM/cefact/codesfortrade/CCTS/CCTS-DTCatalogueVersion3p1.pdf) In RDF this is expressed using the following properties: - the content string should be provided using skos:notation, datatyped with the identifier scheme (inclduing the version number if appropriate); - use dcterms:creator to link to a class describing the agency that manages the identifier scheme or adms:schemaAgency to provide the name as a literal. Although not part of the ADMS conceptual model, it may be useful to provide further properties to the Identifier class such as dcterms:created to provide the date on which the identifier was issued." ;
                 rdfs:isDefinedBy <http://www.w3.org/TR/vocab-adms> ;
                 rdfs:label "Identifier"@en .
 
@@ -483,7 +500,7 @@ adms:Identifier rdf:type owl:Class ;
 <http://www.w3.org/ns/locn#Address> rdf:type owl:Class ;
                                     dct:identifier "locn:Address"@en ;
                                     vann:usageNote "The Address class is defined in the Location Core Vocabulary . Its properties are closely bound to the INSPIRE data model for addresses. In particular, it separates out building names and numbers from the name of the thoroughfare. This is in contrast to VCard which conflates them into 'street address.' The Location Core Vocabulary does, however, borrow the fullAddress property from VCard as a means of providing the full text of the address as a literal."@en ;
-                                    rdfs:comment "An &quot;address representation&quot; as defined in the <a href=\"https://inspire-twg.jrc.ec.europa.eu/inspire-fc.html#_C2538\">data specifications</a> of the EU INSPIRE Directive. The <a href=\"#locn:addressId\">locn:addressId</a> property may be used to link this Address to other representations."^^rdf:XMLLiteral ;
+                                    rdfs:comment "An &quot;address representation&quot; as defined in the <a href=\"https://inspire-twg.jrc.ec.europa.eu/inspire-fc.html#_C2538\">data specifications</a> of the EU INSPIRE Directive. The <a href=\"#locn:addressId\">locn:addressId</a> property may be used to link this Address to other representations." ;
                                     rdfs:isDefinedBy <http://www.w3.org/ns/locn#> ;
                                     rdfs:label "Address"@en ;
                                     <http://www.w3.org/2007/05/powder-s#describedby> <https://joinup.ec.europa.eu/system/files/project/Core_Vocabularies-Business_Location_Person-Specification-v0.3_0.zip> .
