@@ -20,6 +20,8 @@ defaultoutputfile = config_data['defaultoutputfile']
 @click.option('--outputfile', default=defaultoutputfile, help='The output file to write to.')
 
 def main(inputfile,model,configfile,outputfile):
+
+    print('Loading data...', end='\n')
     # Read configuration file
     with open(configfile, encoding='utf-8-sig') as json_file:
         config_data = json.load(json_file)
@@ -64,38 +66,56 @@ def main(inputfile,model,configfile,outputfile):
 
     # Create dictionary with all countries
     countriesmodelfile = config_data["countriesmodelfile"]
-    def getCountryDict(modelfile):
-        countryGraph = rdflib.Graph()
-        countryGraph.parse(modelfile)
-        countryList = countryGraph.query(
+    def getQueryDict(modelfile):
+        graph = rdflib.Graph()
+        graph.parse(modelfile)
+        rowlist = graph.query(
         """SELECT ?uri ?o
-           WHERE {
-              ?uri skos:prefLabel ?o .
-              FILTER (lang(?o) = 'en')
-           }
-           """)
-        countryCode = {}
-        for row in countryList:
-            countryCode[str(row.o.toPython())] = str(row.uri.toPython())
-        return countryCode
-    countryList = getCountryDict(countriesmodelfile)
+               WHERE {
+                  ?uri skos:prefLabel ?o .
+                  FILTER (lang(?o) = 'en')
+               }""")
+        objdict = {}
+        for row in rowlist:
+            objdict[str(row.o.toPython())] = str(row.uri.toPython())
+        return objdict
+
+    start = time.time()
+    countryList = getQueryDict(countriesmodelfile)
+    end = time.time()
+    # print('elapsed time: ',end - start)
+
 
     # Create URI for currency (only EUR for now)
     currencyEUR = config_data["currencyEUR"]
 
-    # Create URI for currency (only EUR for now)
+    # Create URI for corporate Body
     corporateBodyBase = config_data["corporateBodyBase"]
     corporateBodyReplace = config_data["corporateBodyReplace"]
 
+    # set up dictionaries for controlled vocabularies
+    organisationTypeDict = {}
+    corporatebodyDict = {}
+    EUProgrammeDict = {}
+    actionTypeDict = {}
+
+    def checkControlledDictionary(controlledDict,keyLabel,valueLabel,label):
+        # updates the controlled vocabulary and return the skos Concept URI to be used
+        if row[getValue[keyLabel]] not in controlledDict:
+            lbl = label + str(ix)
+            URISpec = URISpecification(def_base_uri,{"label":lbl})
+            Concept_tmp = ontology.skosConcept(uri=URISpec)
+            Concept_tmp.skosprefLabel += row[getValue[valueLabel]]
+            controlledDict[row[getValue[keyLabel]]] = Concept_tmp.getInstanceUri()
+        return controlledDict[row[getValue[keyLabel]]]
 
     #-------------------------------#
     # Create Instances of Dataset   #
     #-------------------------------#
-    print('Going over all data to create the objects...')
-    with click.progressbar(data.iterrows()) as total:
+    with click.progressbar(data.iterrows(), label='Creating instances', length=len(data.index)) as total:
         for ix, row in total:
 
-            if ix < 2:
+            if ix < 260:
 
                 #----------------#
                 # Create Address #
@@ -134,41 +154,40 @@ def main(inputfile,model,configfile,outputfile):
                     RecipientAlter_tmp = ontology.rovRegisteredOrganization(uri=None, imposeURI=recipientURI)
                     RecipientAlter_tmp.rovlegalName += row[getValue['recipientName']]
                     RecipientAlter_tmp.rovregistration += row[getValue['recipientVAT']]
-                    RecipientAlter_tmp.rovorgType += row[getValue['organisationTypeCode']] + ', ' + row[getValue['organisationTypeDescription']]
+                    RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','RegisteredOrganisation')
                 elif recipientType == "Public Organisation":
                     RecipientAlter_tmp = ontology.cpovPublicOrganisation(uri=None, imposeURI=recipientURI)
                     # RecipientAlter_tmp.orgclassification += # Should be filled in by value of controlled voc. Where to find? No info in spreadsheet either.
                 elif recipientType == "Person":
-                    RecipientAlter_tmp = ontology.cpovPublicOrganisation(uri=None, imposeURI=recipientURI)
+                    RecipientAlter_tmp = ontology.foafPerson(uri=None, imposeURI=recipientURI)
                     RecipientAlter_tmp.foaffamilyName += row[getValue['recipientName']]
                 elif recipientType == "Recipient":
                     pass # Recipient object already made
                 elif recipientType == "International Organisation":
-                    RecipientAlter_tmp = ontology.InternationalOrganisation(uri=None, imposeURI=recipientURI)
+                    RecipientAlter_tmp = ontology.InternationalOrganization(uri=None, imposeURI=recipientURI)
                 elif recipientType == "Trust Fund":
                     RecipientAlter_tmp = ontology.TrustFund(uri=None, imposeURI=recipientURI)
                 elif recipientType == "NFPO":
                     RecipientAlter_tmp = ontology.NonProfitOrganisation(uri=None, imposeURI=recipientURI)
                     RecipientAlter_tmp.rovregistration += row[getValue['recipientVAT']]
-                    RecipientAlter_tmp.rovorgType += row[getValue['organisationTypeCode']] + ', ' + row[getValue['organisationTypeDescription']]
+                    RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','NFPO')
                 elif recipientType == "NGO":
                     RecipientAlter_tmp = ontology.NGO(uri=None, imposeURI=recipientURI)
                     RecipientAlter_tmp.rovregistration += row[getValue['recipientVAT']]
-                    RecipientAlter_tmp.rovorgType += row[getValue['organisationTypeCode']] + ', ' + row[getValue['organisationTypeDescription']]
-
+                    RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','NGO')
                 else:
                     print('Recipient: no additional type match.')
 
-                # -------------------------#
+                # ------------------------#
                 # Create Legal Commitment #
-                # -------------------------#
+                # ------------------------#
                 lbl = "LegalCommitment" + str(ix)
                 URISpec = URISpecification(def_base_uri,{"label":lbl})
                 LegalCommitment_tmp = ontology.LegalCommitment(uri=URISpec)
                 LegalCommitment_tmp.dctdescription += row[getValue['subject']]
                 LegalCommitment_tmp.fundingType += row[getValue['fundingType']]
                 LegalCommitment_tmp.hasCoordinator += Recipient_tmp
-                LegalCommitment_tmp.hasActionLocation += Location_tmp # row[getValue['actionLocation']]
+                LegalCommitment_tmp.hasActionLocation += Location_tmp
                 # for action location, should we take the same location as defined in line 77?
                 # text in the excel file is different but seems to refer to similar location
 
@@ -192,7 +211,7 @@ def main(inputfile,model,configfile,outputfile):
                 DG = row[getValue['DG']]
                 if DG in corporateBodyReplace:
                     DG = corporateBodyReplace[DG]
-                IndicativeTransaction_tmp.committedBy += corporateBodyBase + DG
+                IndicativeTransaction_tmp.committedBy += checkControlledDictionary(corporatebodyDict,'DG','DGDescriptionEn','CorporateBody')
                 IndicativeTransaction_tmp.hasEstimatedValue += MonetaryValue_tmp
 
                 # --------------------#
@@ -226,13 +245,15 @@ def main(inputfile,model,configfile,outputfile):
                 lbl = "BudgetaryCommitment" + str(ix)
                 URISpec = URISpecification(def_base_uri,{"label":lbl})
                 BudgetaryCommitment_tmp = ontology.BudgetaryCommitment(uri=URISpec)
-
                 BudgetaryCommitment_tmp.positionKey += PositionKey_tmp
                 BudgetaryCommitment_tmp.commitmentKey += CommitmentKey_tmp
                 BudgetaryCommitment_tmp.dctdate += row[getValue['year']]
-                # BudgetaryCommitment_tmp.actionType += row['ACTION_TYPE'] # should be skos: concept
-                # BudgetaryCommitment_tmp.financialManagementArea += row['FIN_MGT_AREA_CD'] # should be skos:concept
-                # BudgetaryCommitment_tmp.expenseType += row['IS_ADMIN'] # should be skos:concept
+                BudgetaryCommitment_tmp.actionType += checkControlledDictionary(actionTypeDict,'actionType','actionTypeDescriptionEn','actionType')
+                financialManagementAreaBase = config_data['financialManagementAreaBase']
+                BudgetaryCommitment_tmp.financialManagementArea += financialManagementAreaBase + row[getValue['financialManagementArea']]
+                expenseTypeBase = config_data['expenseTypeBase']
+                expenseTypeMap = config_data['expenseTypeMap']
+                BudgetaryCommitment_tmp.expenseType += expenseTypeBase + expenseTypeMap[str(row[getValue['expenseType']])] # should be skos:concept
                 BudgetaryCommitment_tmp.hasBudgetLine += Nomenclature_tmp
                 BudgetaryCommitment_tmp.hasTotalValue += MonetaryValue_tmp
                 BudgetaryCommitment_tmp.hasIndicativeTransaction += IndicativeTransaction_tmp
@@ -242,24 +263,26 @@ def main(inputfile,model,configfile,outputfile):
                 # Create Corporate Body # --> link to EU Budget
                 # ----------------------#
 
-                # we will link to URI directly.
-                # To check how to insert the relevant information
-
-
-        print('\t\t\t\t\t ... Done.')
+                # we will link to URI directly in indicative transaction
 
     #-----------------------------------------------#
     # Print all triples to file                     #
     #-----------------------------------------------#
-    output = open(outputfile,'w')
+    # briefly compute total numer of lines to get a time estimatedValue
+    nbrdfstatements = 0
     for (subject, predicate, obj) in session.rdf_statements():
-        if obj not in session.instances:
-            if isinstance(obj, str) and obj.startswith("http://"):
-                output.write("<%s> <%s> <%s> .\n" % (subject, predicate, obj))
+        nbrdfstatements += 1
+
+    output = open(outputfile,'w')
+    with click.progressbar(session.rdf_statements(), label='Printing triples', length=nbrdfstatements) as total:
+        for (subject, predicate, obj) in total:
+            if obj not in session.instances:
+                if isinstance(obj, str) and obj.startswith("http://"):
+                    output.write("<%s> <%s> <%s> .\n" % (subject, predicate, obj))
+                else:
+                    output.write('<%s> <%s> "%s" .\n' % (subject, predicate, obj))
             else:
-                output.write('<%s> <%s> "%s" .\n' % (subject, predicate, obj))
-        else:
-            output.write("<%s> <%s> <%s> .\n" % (subject, predicate, obj.uri))
+                output.write("<%s> <%s> <%s> .\n" % (subject, predicate, obj.uri))
 
 
 

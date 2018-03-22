@@ -44,7 +44,7 @@
   "": "GEO_ZONE_DESC_EN",
   "": "GEO_ZONE_DESC_DE",
   "actionType": "ACTION_TYPE",
-  "": "ACTION_TYPE_DESC_EN",
+  "actionTypeDescriptionEn": "ACTION_TYPE_DESC_EN",
   "": "ACTION_TYPE_DESC_FR",
   "": "ACTION_TYPE_DESC_DE",
   "": "GRANT_FINANCING_FORM_CD",
@@ -101,5 +101,16 @@
     "OP": "PUBL",
     "COMM": "CNECT",
     "SRSS": "SRSS"
+  },
+"actionTypeBase": "http://publications.europa.eu/resource/authority/action-type/",
+"fundingTypeBase": "http://publications.europa.eu/resource/authority/funding-type/",
+"publicOrganisationBase": "http://publications.europa.eu/resource/authority/public-organisation/",
+"organisationBase": "http://publications.europa.eu/resource/authority/organisation/",
+"EUProgrammeBase": "http://publications.europa.eu/resource/authority/eu-programme/",
+"financialManagementAreaBase": "http://publications.europa.eu/resource/authority/financial-management-area/",
+"expenseTypeBase": "http://publications.europa.eu/resource/authority/expense-type/",
+"expenseTypeMap": {
+    "0": "Operational",
+    "1": "Administrative"
   }
 }
