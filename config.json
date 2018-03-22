@@ -60,7 +60,7 @@
   "": "COM_POS_UID",
   "": "NUTS_POST_CODE",
   "": "NUTS2_NAME",
-  "": "PRLB_IS_NATURAL_PERSON",
+  "isNaturalPerson": "PRLB_IS_NATURAL_PERSON",
   "": "LE_IS_NGO_FLG",
   "": "IS_NFPO",
   "organisationTypeCode": "LEGAL_FORM_CD",

@@ -23,13 +23,13 @@
                                    vann:preferredNamespacePrefix "fts" ;
                                    owl:versionInfo "1.00"^^xsd:string ;
                                    dct:publisher <http://publications.europa.eu/resource/authority/corporate-body/DIGIT> ;
-                                   dct:title "Financial Transparency System Pilot Vocabulary"@en ;
+                                   dct:title "Financial Transparency System Vocabulary"@en ;
                                    dct:status <http://purl.org/adms/status/UnderDevelopment> ;
                                    dct:contributor <http://publications.europa.eu/resource/authority/corporate-body/BUDG> ;
                                    dct:creator <http://publications.europa.eu/resource/authority/corporate-body/DIGIT> ;
                                    vann:preferredNamespaceUri "http://data.europa.eu/fts/" ;
                                    dct:created "2018-02-27"^^xsd:date ;
-                                   dct:description "The FTS Pilot Vocabulary models the FTS data until 2016 as Linked Open Data"@en .
+                                   dct:description "The FTS Vocabulary models the FTS data until 2016 as Linked Open Data"@en .
 
 #################################################################
 #    Annotation properties

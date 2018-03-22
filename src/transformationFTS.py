@@ -70,7 +70,8 @@ def main(inputfile,model,configfile,outputfile):
         graph = rdflib.Graph()
         graph.parse(modelfile)
         rowlist = graph.query(
-        """SELECT ?uri ?o
+        """PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        SELECT ?uri ?o
                WHERE {
                   ?uri skos:prefLabel ?o .
                   FILTER (lang(?o) = 'en')
@@ -83,7 +84,7 @@ def main(inputfile,model,configfile,outputfile):
     start = time.time()
     countryList = getQueryDict(countriesmodelfile)
     end = time.time()
-    # print('elapsed time: ',end - start)
+    print('elapsed time: ',end - start)
 
 
     # Create URI for currency (only EUR for now)
@@ -115,7 +116,7 @@ def main(inputfile,model,configfile,outputfile):
     with click.progressbar(data.iterrows(), label='Creating instances', length=len(data.index)) as total:
         for ix, row in total:
 
-            if ix < 260:
+            if ix < 10:
 
                 #----------------#
                 # Create Address #
@@ -178,6 +179,14 @@ def main(inputfile,model,configfile,outputfile):
                 else:
                     print('Recipient: no additional type match.')
 
+                # -----------------------#
+                # Create Action Location #
+                # -----------------------#
+                lbl = "ActionLocation" + str(ix)
+                URISpec = URISpecification(def_base_uri,{"label":lbl})
+                ActionLocation_tmp = ontology.dctLocation(uri=URISpec)
+                ActionLocation_tmp.locngeographicName += row[getValue['actionLocation']]
+
                 # ------------------------#
                 # Create Legal Commitment #
                 # ------------------------#
@@ -187,7 +196,7 @@ def main(inputfile,model,configfile,outputfile):
                 LegalCommitment_tmp.dctdescription += row[getValue['subject']]
                 LegalCommitment_tmp.fundingType += row[getValue['fundingType']]
                 LegalCommitment_tmp.hasCoordinator += Recipient_tmp
-                LegalCommitment_tmp.hasActionLocation += Location_tmp
+                LegalCommitment_tmp.hasActionLocation += ActionLocation_tmp
                 # for action location, should we take the same location as defined in line 77?
                 # text in the excel file is different but seems to refer to similar location
 
