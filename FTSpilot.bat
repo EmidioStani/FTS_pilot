@@ -1,1 +1,1 @@
-python src/transformationFTS.py --inputfile FTS_short.csv --model FTS.ttl
+python src/transformationFTS.py --inputfile FTS.csv --model FTS.ttl
