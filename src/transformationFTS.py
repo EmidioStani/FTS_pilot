@@ -107,8 +107,8 @@ def main(inputfile,model,configfile,outputfile):
     def checkControlledDictionary(controlledDict,keyLabel,valueLabel,label):
         # updates the controlled vocabulary and return the skos Concept URI to be used
         if row[getValue[keyLabel]] not in controlledDict:
-            lbl = label + str(ix)
-            URISpec = URISpecification(def_base_uri,{"label":lbl})
+            lbl = label
+            URISpec = URISpecification(def_base_uri,lbl)
             Concept_tmp = ontology.skosConcept(uri=URISpec)
             Concept_tmp.skosprefLabel += row[getValue[valueLabel]]
             controlledDict[row[getValue[keyLabel]]] = Concept_tmp.getInstanceUri()
@@ -118,162 +118,121 @@ def main(inputfile,model,configfile,outputfile):
     # Create Instances of Dataset   #
     #-------------------------------#
 
-    # Create dictionaries
-    addressDict = {} # fulladdress as key
-    locationDict = {} # geographicName as key
-    recipientDict = {} # prefLabel as key
-    actionLocationDict = {}
-    legalCommitmentDict = {}
-    indicativeTransactionDict = {} # not sure if it makes sense? No obvious key
-    budgetaryCommitmentDict = {}
-    positionKeyDict = {}
-    commitmentKeyDict = {}
-    nomenclatureDict = {}
-
     # Go through the data file creating all instances
     with click.progressbar(data.iterrows(), label='Creating instances', length=len(data.index)) as total:
         for ix, row in total:
 
             if ix < numberOfRowsToConsider:
+
                 #----------------#
                 # Create Address #
                 #----------------#
-                if row[getValue['address']] in addressDict:
-                    Address_tmp = addressDict[row[getValue['address']]]
-                else:
-                    lbl = "Address" + str(ix)
-                    URISpec = URISpecification(def_base_uri,{"label":lbl})
-                    Address_tmp = ontology.locnAddress(uri=URISpec)
-                    country = row[getValue['countryDescriptionEn']]
-                    if country in countryReplace:
-                        country = countryReplace[country]
-                    Address_tmp.locnadminUnitL1 += countryList.setdefault(country, countryNotFoundBase + country)
-                    Address_tmp.locnfullAddress += row[getValue['address']]
-                    Address_tmp.locnpostName += row[getValue['city']]
-                    if str(row[getValue['postCode']]) != "":
-                        Address_tmp.locnpostCode += row[getValue['postCode']]
-                    addressDict[row[getValue['address']]] = Address_tmp
+                lbl = row[getValue['address']] + row[getValue['city']] + row[getValue['postCode']]
+                URISpec = URISpecification(def_base_uri,lbl)
+                Address_tmp = ontology.locnAddress(uri=URISpec)
+                country = row[getValue['countryDescriptionEn']]
+                if country in countryReplace:
+                    country = countryReplace[country]
+                Address_tmp.locnadminUnitL1 += countryList.setdefault(country, countryNotFoundBase + country)
+                Address_tmp.locnfullAddress += row[getValue['address']]
+                Address_tmp.locnpostName += row[getValue['city']]
+                Address_tmp.locnpostCode += row[getValue['postCode']]
 
 
                 #-----------------#
                 # Create Location #
                 #-----------------#
                 geographicName = str(row[getValue['recipientName']]) + ', ' + str(row[getValue['city']]) + ', ' + str(row[getValue['countryDescriptionEn']])
-                if str(geographicName) != "":
-                    if geographicName in locationDict:
-                        Location_tmp = locationDict[geographicName]
-                    else:
-                        lbl = "Location" + str(ix)
-                        URISpec = URISpecification(def_base_uri,{"label":lbl})
-                        Location_tmp = ontology.dctLocation(uri=URISpec)
-                        Location_tmp.locngeographicName += geographicName
-                        Location_tmp.locnaddress += Address_tmp
-                        addressDict[geographicName] = Location_tmp
+                URISpec = URISpecification(def_base_uri,geographicName)
+                Location_tmp = ontology.dctLocation(uri=URISpec)
+                Location_tmp.locngeographicName += geographicName
+                Location_tmp.locnaddress += Address_tmp
 
                 #------------------#
                 # Create Recipient #
                 #------------------#
-                if row[getValue['recipientName']] in recipientDict:
-                    Recipient_tmp = recipientDict[row[getValue['recipientName']]]
+                lbl = row[getValue['recipientName']]
+                URISpec = URISpecification(def_base_uri,lbl)
+                Recipient_tmp = ontology.Recipient(uri=URISpec)
+                Recipient_tmp.prefLabel += row[getValue['recipientName']]
+                Recipient_tmp.hasLocation += Location_tmp
+                recipientType = recipientCatg[row[getValue['recipientTypeDescription']].casefold()]
+                recipientURI = Recipient_tmp.getInstanceUri()
+
+                # Enforce extra indicator fields
+                if row[getValue['isNaturalPerson']]:
+                    recipientType = "Person"
+                elif row[getValue['isNFPO']]:
+                    recipientType = "NFPO"
+                elif row[getValue['isNGO']]:
+                    recipientType = "NGO"
+
+                # If needed, an extra type for the Recipient is assigned
+                if recipientType == "Registered Organisation":
+                    RecipientAlter_tmp = ontology.rovRegisteredOrganization(uri=None, imposeURI=recipientURI)
+                    RecipientAlter_tmp.rovlegalName += row[getValue['recipientName']]
+                    lbl = row[getValue['recipientVAT']]
+                    URISpec = URISpecification(def_base_uri,lbl)
+                    RecipientVAT_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['recipientVAT']])
+                    RecipientAlter_tmp.rovregistration += RecipientVAT_tmp
+                    RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','RegisteredOrganisation' + row[getValue['recipientName']])
+                elif recipientType == "Public Organisation":
+                    RecipientAlter_tmp = ontology.cpovPublicOrganisation(uri=None, imposeURI=recipientURI)
+                    # RecipientAlter_tmp.orgclassification += # Should be filled in by value of controlled voc. Where to find? No info in spreadsheet either.
+                elif recipientType == "Person":
+                    RecipientAlter_tmp = ontology.foafPerson(uri=None, imposeURI=recipientURI)
+                    RecipientAlter_tmp.foaffamilyName += row[getValue['recipientName']]
+                elif recipientType == "Recipient":
+                    pass # Recipient object already made
+                elif recipientType == "International Organisation":
+                    RecipientAlter_tmp = ontology.InternationalOrganization(uri=None, imposeURI=recipientURI)
+                elif recipientType == "Trust Fund":
+                    RecipientAlter_tmp = ontology.TrustFund(uri=None, imposeURI=recipientURI)
+                elif recipientType == "NFPO":
+                    RecipientAlter_tmp = ontology.NonProfitOrganisation(uri=None, imposeURI=recipientURI)
+                    lbl = row[getValue['recipientVAT']]
+                    URISpec = URISpecification(def_base_uri,lbl)
+                    RecipientVAT_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['recipientVAT']])
+                    RecipientAlter_tmp.rovregistration += RecipientVAT_tmp
+                    RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','NFPO' + row[getValue['recipientVAT']])
+                elif recipientType == "NGO":
+                    RecipientAlter_tmp = ontology.NGO(uri=None, imposeURI=recipientURI)
+                    lbl = row[getValue['recipientVAT']]
+                    URISpec = URISpecification(def_base_uri,lbl)
+                    RecipientVAT_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['recipientVAT']])
+                    RecipientAlter_tmp.rovregistration += RecipientVAT_tmp
+                    RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','NGO' + row[getValue['recipientVAT']])
                 else:
-                    lbl = "Recipient" + str(ix)
-                    URISpec = URISpecification(def_base_uri,{"label":lbl})
-                    Recipient_tmp = ontology.Recipient(uri=URISpec)
-                    Recipient_tmp.prefLabel += row[getValue['recipientName']]
-                    if str(geographicName) != "":
-                        Recipient_tmp.hasLocation += Location_tmp
-                    recipientType = recipientCatg[row[getValue['recipientTypeDescription']].casefold()]
-                    recipientURI = Recipient_tmp.getInstanceUri()
-
-                    # Enforce extra indicator fields
-                    if row[getValue['isNaturalPerson']]:
-                        recipientType = "Person"
-                    elif row[getValue['isNFPO']]:
-                        recipientType = "NFPO"
-                    elif row[getValue['isNGO']]:
-                        recipientType = "NGO"
+                    print('Recipient: no additional type match.')
 
 
-
-                    # If needed, an extra type for the Recipient is assigned
-                    if recipientType == "Registered Organisation":
-                        RecipientAlter_tmp = ontology.rovRegisteredOrganization(uri=None, imposeURI=recipientURI)
-                        RecipientAlter_tmp.rovlegalName += row[getValue['recipientName']]
-                        if str(row[getValue['recipientVAT']]) != "":
-                            lbl = "recipientVAT" + str(ix)
-                            URISpec = URISpecification(def_base_uri,{"label":lbl})
-                            RecipientVAT_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['recipientVAT']])
-                            RecipientAlter_tmp.rovregistration += RecipientVAT_tmp
-                        RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','RegisteredOrganisation')
-                    elif recipientType == "Public Organisation":
-                        RecipientAlter_tmp = ontology.cpovPublicOrganisation(uri=None, imposeURI=recipientURI)
-                        # RecipientAlter_tmp.orgclassification += # Should be filled in by value of controlled voc. Where to find? No info in spreadsheet either.
-                    elif recipientType == "Person":
-                        RecipientAlter_tmp = ontology.foafPerson(uri=None, imposeURI=recipientURI)
-                        RecipientAlter_tmp.foaffamilyName += row[getValue['recipientName']]
-                    elif recipientType == "Recipient":
-                        pass # Recipient object already made
-                    elif recipientType == "International Organisation":
-                        RecipientAlter_tmp = ontology.InternationalOrganization(uri=None, imposeURI=recipientURI)
-                    elif recipientType == "Trust Fund":
-                        RecipientAlter_tmp = ontology.TrustFund(uri=None, imposeURI=recipientURI)
-                    elif recipientType == "NFPO":
-                        RecipientAlter_tmp = ontology.NonProfitOrganisation(uri=None, imposeURI=recipientURI)
-                        if str(row[getValue['recipientVAT']]) != "":
-                            lbl = "recipientVAT" + str(ix)
-                            URISpec = URISpecification(def_base_uri,{"label":lbl})
-                            RecipientVAT_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['recipientVAT']])
-                            RecipientAlter_tmp.rovregistration += RecipientVAT_tmp
-                        RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','NFPO')
-                    elif recipientType == "NGO":
-                        RecipientAlter_tmp = ontology.NGO(uri=None, imposeURI=recipientURI)
-                        if str(row[getValue['recipientVAT']]) != "":
-                            lbl = "recipientVAT" + str(ix)
-                            URISpec = URISpecification(def_base_uri,{"label":lbl})
-                            RecipientVAT_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['recipientVAT']])
-                            RecipientAlter_tmp.rovregistration += RecipientVAT_tmp
-                        RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','NGO')
-                    else:
-                        print('Recipient: no additional type match.')
-
-                    recipientDict[row[getValue['recipientName']]] = Recipient_tmp
 
                 # -----------------------#
                 # Create Action Location #
                 # -----------------------#
-                if str(row[getValue['actionLocation']]) != "":
-                    if row[getValue['actionLocation']] in actionLocationDict:
-                        ActionLocation_tmp = actionLocationDict[row[getValue['actionLocation']]]
-                    else:
-                        lbl = "ActionLocation" + str(ix)
-                        URISpec = URISpecification(def_base_uri,{"label":lbl})
-                        ActionLocation_tmp = ontology.dctLocation(uri=URISpec)
-                        ActionLocation_tmp.locngeographicName += row[getValue['actionLocation']]
-                        actionLocationDict[row[getValue['actionLocation']]] = ActionLocation_tmp
+                lbl = row[getValue['actionLocation']]
+                URISpec = URISpecification(def_base_uri,lbl)
+                ActionLocation_tmp = ontology.dctLocation(uri=URISpec)
+                ActionLocation_tmp.locngeographicName += row[getValue['actionLocation']]
 
 
                 # ------------------------#
                 # Create Legal Commitment #
                 # ------------------------#
-                if row[getValue['subject']] in legalCommitmentDict:
-                    LegalCommitment_tmp = legalCommitmentDict[row[getValue['subject']]]
-                else:
-                    lbl = "LegalCommitment" + str(ix)
-                    URISpec = URISpecification(def_base_uri,{"label":lbl})
-                    LegalCommitment_tmp = ontology.LegalCommitment(uri=URISpec)
-                    LegalCommitment_tmp.dctdescription += row[getValue['subject']]
-                    LegalCommitment_tmp.fundingType += row[getValue['fundingType']]
+                lbl = row[getValue['subject']] + row[getValue['fundingType']] + str(row[getValue['isCoordinator']])
+                URISpec = URISpecification(def_base_uri,lbl)
+                LegalCommitment_tmp = ontology.LegalCommitment(uri=URISpec)
+                LegalCommitment_tmp.dctdescription += row[getValue['subject']]
+                LegalCommitment_tmp.fundingType += row[getValue['fundingType']]
                 if row[getValue['isCoordinator']]:
                     LegalCommitment_tmp.hasCoordinator += Recipient_tmp
-                if str(row[getValue['actionLocation']]) != "":
-                    LegalCommitment_tmp.hasActionLocation += ActionLocation_tmp
-                legalCommitmentDict[row[getValue['subject']]] = LegalCommitment_tmp
+                LegalCommitment_tmp.hasActionLocation += ActionLocation_tmp
 
                 # ----------------------#
                 # Create Monetary Value # --> link to EU Budget
                 # ----------------------#
-                lbl = "MonetaryValue" + str(ix)
-                URISpec = URISpecification(def_base_uri,{"label":lbl})
+                lbl = str(row[getValue['totalValue']])
+                URISpec = URISpecification(def_base_uri,lbl)
                 MonetaryValue_tmp = ontology.MonetaryValue(uri=URISpec)
                 MonetaryValue_tmp.value += row[getValue['totalValue']]
                 MonetaryValue_tmp.currency += currencyEUR
@@ -281,8 +240,8 @@ def main(inputfile,model,configfile,outputfile):
                 # ------------------------------#
                 # Create Indicative Transaction #
                 # ------------------------------#
-                lbl = "IndicativeTransaction" + str(ix)
-                URISpec = URISpecification(def_base_uri,{"label":lbl})
+                lbl = row[getValue['DG']] + row[getValue['recipientName']] + str(row[getValue['totalValue']]) # check if allowed
+                URISpec = URISpecification(def_base_uri,lbl)
                 IndicativeTransaction_tmp = ontology.IndicativeTransaction(uri=URISpec)
                 IndicativeTransaction_tmp.committedTo += Recipient_tmp
                 # construct corporate body uri
@@ -295,63 +254,47 @@ def main(inputfile,model,configfile,outputfile):
                 # --------------------#
                 # Create Position Key #
                 # --------------------#
-                if row[getValue['positionKey']] in positionKeyDict:
-                    PositionKey_tmp = positionKeyDict[row[getValue['positionKey']]]
-                else:
-                    lbl = "positionKey" + str(ix)
-                    URISpec = URISpecification(def_base_uri,{"label":lbl})
-                    PositionKey_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['positionKey']])
-                    positionKeyDict[row[getValue['positionKey']]] = PositionKey_tmp
+                lbl = str(row[getValue['positionKey']])
+                URISpec = URISpecification(def_base_uri,lbl)
+                PositionKey_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['positionKey']])
 
                 # ----------------------#
                 # Create Commitment Key #
                 # ----------------------#
-                if row[getValue['commitmentKey']] in commitmentKeyDict:
-                    CommitmentKey_tmp = commitmentKeyDict[row[getValue['commitmentKey']]]
-                else:
-                    lbl = "commitmentKey" + str(ix)
-                    URISpec = URISpecification(def_base_uri,{"label":lbl})
-                    CommitmentKey_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['commitmentKey']])
-                    commitmentKeyDict[row[getValue['commitmentKey']]] = CommitmentKey_tmp
+                lbl = str(row[getValue['commitmentKey']])
+                URISpec = URISpecification(def_base_uri,lbl)
+                CommitmentKey_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['commitmentKey']])
 
                 # --------------------#
                 # Create Nomenclature # --> link to EU Budget
                 # --------------------#
-                if row[getValue['budgetLine']] in nomenclatureDict:
-                    Nomenclature_tmp = nomenclatureDict[row[getValue['budgetLine']]]
-                else:
-                    lbl = "Nomenclature" + str(ix)
-                    URISpec = URISpecification(def_base_uri,{"label":lbl})
-                    Nomenclature_tmp = ontology.Nomenclature(uri=URISpec)
-                    Nomenclature_tmp.alias += row[getValue['budgetLine']]
-                    Nomenclature_tmp.heading += row[getValue['headingEn']]
-                    nomenclatureDict[row[getValue['budgetLine']]] = Nomenclature_tmp
+                lbl = row[getValue['budgetLine']] + row[getValue['headingEn']]
+                URISpec = URISpecification(def_base_uri,lbl)
+                Nomenclature_tmp = ontology.Nomenclature(uri=URISpec)
+                Nomenclature_tmp.alias += row[getValue['budgetLine']]
+                Nomenclature_tmp.heading += row[getValue['headingEn']]
 
                 # ----------------------------#
                 # Create Budgetary Commitment #
                 # ----------------------------#
-                if row[getValue['positionKey']] in budgetaryCommitmentDict:
-                    BudgetaryCommitment_tmp = budgetaryCommitmentDict[row[getValue['positionKey']]]
-                else:
-                    lbl = "BudgetaryCommitment" + str(ix)
-                    URISpec = URISpecification(def_base_uri,{"label":lbl})
-                    BudgetaryCommitment_tmp = ontology.BudgetaryCommitment(uri=URISpec)
-                    BudgetaryCommitment_tmp.positionKey += PositionKey_tmp
-                    BudgetaryCommitment_tmp.commitmentKey += CommitmentKey_tmp
-                    BudgetaryCommitment_tmp.dctdate += row[getValue['year']]
-                    actionTypeVal = checkControlledDictionary(actionTypeDict,'actionType','actionTypeDescriptionEn','actionType')
-                    if str(actionTypeVal) != "":
-                        BudgetaryCommitment_tmp.actionType += actionTypeVal
-                    financialManagementAreaBase = config_data['financialManagementAreaBase']
-                    BudgetaryCommitment_tmp.financialManagementArea += financialManagementAreaBase + row[getValue['financialManagementArea']]
-                    expenseTypeBase = config_data['expenseTypeBase']
-                    expenseTypeMap = config_data['expenseTypeMap']
-                    BudgetaryCommitment_tmp.expenseType += expenseTypeBase + expenseTypeMap[str(row[getValue['expenseType']])] # should be skos:concept
-                    BudgetaryCommitment_tmp.hasBudgetLine += Nomenclature_tmp
-                    BudgetaryCommitment_tmp.hasTotalValue += MonetaryValue_tmp
-                    BudgetaryCommitment_tmp.hasLegalCommitment += LegalCommitment_tmp
+                lbl = str(row[getValue['year']]) + row[getValue['financialManagementArea']] + str(row[getValue['expenseType']])
+                URISpec = URISpecification(def_base_uri,lbl)
+                BudgetaryCommitment_tmp = ontology.BudgetaryCommitment(uri=URISpec)
+                BudgetaryCommitment_tmp.positionKey += PositionKey_tmp
+                BudgetaryCommitment_tmp.commitmentKey += CommitmentKey_tmp
+                BudgetaryCommitment_tmp.dctdate += row[getValue['year']]
+                actionTypeVal = checkControlledDictionary(actionTypeDict,'actionType','actionTypeDescriptionEn','actionType')
+                BudgetaryCommitment_tmp.actionType += actionTypeVal
+                financialManagementAreaBase = config_data['financialManagementAreaBase']
+                BudgetaryCommitment_tmp.financialManagementArea += financialManagementAreaBase + row[getValue['financialManagementArea']]
+                expenseTypeBase = config_data['expenseTypeBase']
+                expenseTypeMap = config_data['expenseTypeMap']
+                BudgetaryCommitment_tmp.expenseType += expenseTypeBase + expenseTypeMap[str(row[getValue['expenseType']])] # should be skos:concept
+                BudgetaryCommitment_tmp.hasBudgetLine += Nomenclature_tmp
+                BudgetaryCommitment_tmp.hasTotalValue += MonetaryValue_tmp
+                BudgetaryCommitment_tmp.hasLegalCommitment += LegalCommitment_tmp
                 BudgetaryCommitment_tmp.hasIndicativeTransaction += IndicativeTransaction_tmp
-                budgetaryCommitmentDict[row[getValue['positionKey']]] = BudgetaryCommitment_tmp
+
 
                 # ----------------------#
                 # Create Corporate Body # --> link to EU Budget
@@ -362,11 +305,13 @@ def main(inputfile,model,configfile,outputfile):
     #-----------------------------------------------#
     # Print all triples to file                     #
     #-----------------------------------------------#
-    # briefly compute total numer of lines to get a time estimatedValue
+
+    # briefly compute total numer of lines to get a time estimate
     nbrdfstatements = 0
     for (subject, predicate, obj) in session.rdf_statements():
         nbrdfstatements += 1
 
+    # print all triples to the output file
     output = open(outputfile,'w')
     with click.progressbar(session.rdf_statements(), label='Printing triples', length=nbrdfstatements) as total:
         for (subject, predicate, obj) in total:

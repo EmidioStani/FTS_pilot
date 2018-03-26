@@ -1,6 +1,6 @@
 {
 "baseuri": "http://fts.example.com/",
-"numberOfRowsToConsider": "300",
+"numberOfRowsToConsider": "600",
 "defaultoutputfile": "output.nt",
 "defaultinputfile": "FTS.csv",
 "defaultmodelfile": "FTS.ttl",
@@ -103,6 +103,11 @@
     "COMM": "CNECT",
     "SRSS": "SRSS"
   },
+"countryNotFoundBase": "http://data.example.com/id/countrynotfound/",
+"countryReplace": {
+  "Congo (Democratic Republic of)": "Congo",
+  "Ivory coast": "Côte d’Ivoire"
+},
 "actionTypeBase": "http://publications.europa.eu/resource/authority/action-type/",
 "fundingTypeBase": "http://publications.europa.eu/resource/authority/funding-type/",
 "publicOrganisationBase": "http://publications.europa.eu/resource/authority/public-organisation/",
