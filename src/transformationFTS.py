@@ -5,9 +5,11 @@ import rdflib
 import click
 import os
 import json
+import inspect
 
 # load config file
-with open('config.json', encoding='utf-8-sig') as json_file:
+configfile = 'config.json'
+with open(configfile, encoding='utf-8-sig') as json_file:
     config_data = json.load(json_file)
 defaultinputfile = config_data['defaultinputfile']
 defaultmodelfile = config_data['defaultmodelfile']
@@ -16,7 +18,7 @@ defaultoutputfile = config_data['defaultoutputfile']
 @click.command()
 @click.option('--inputfile', default=defaultinputfile, help='Input data in csv.')
 @click.option('--model', default=defaultmodelfile, help='The ttl model to use.')
-@click.option('--configfile', default='config.json', help='The configuration file to use.')
+@click.option('--configfile', default=configfile, help='The configuration file to use.')
 @click.option('--outputfile', default=defaultoutputfile, help='The output file to write to.')
 
 def main(inputfile,model,configfile,outputfile):
@@ -44,13 +46,13 @@ def main(inputfile,model,configfile,outputfile):
     # Load data
     print('Loading data...')
     os.chdir(os.path.join(cwd,'data/raw'))
-    data = read_csv(data_filename, 0)
+    data = pandas.read_csv(data_filename, sep=',', encoding = "ANSI", quotechar='"', na_filter=False)
     session = Session.get_current()
 
     # Load model from Turtle file
     print('Loading model...')
     os.chdir(os.path.join(cwd,'models'))
-    ontology = load_ontology(model_filename)
+    ontology = Ontology.load(model_filename)
     os.chdir(cwd)
 
     #-------------------------------#
@@ -85,10 +87,9 @@ def main(inputfile,model,configfile,outputfile):
             objdict[str(row.o.toPython())] = str(row.uri.toPython())
         return objdict
 
-    start = time.time()
     countryList = getQueryDict(countriesmodelfile)
-    end = time.time()
-    print('   ... elapsed time: ',end - start)
+    countryNotFoundBase = config_data["countryNotFoundBase"]
+    countryReplace = config_data["countryReplace"]
 
 
     # Create URI for currency (only EUR for now)
@@ -101,7 +102,6 @@ def main(inputfile,model,configfile,outputfile):
     # set up dictionaries for controlled vocabularies
     organisationTypeDict = {}
     corporatebodyDict = {}
-    # EUProgrammeDict = {}
     actionTypeDict = {}
 
     def checkControlledDictionary(controlledDict,keyLabel,valueLabel,label):
@@ -144,10 +144,13 @@ def main(inputfile,model,configfile,outputfile):
                     lbl = "Address" + str(ix)
                     URISpec = URISpecification(def_base_uri,{"label":lbl})
                     Address_tmp = ontology.locnAddress(uri=URISpec)
-                    Address_tmp.locnadminUnitL1 += countryList.setdefault(row[getValue['countryDescriptionEn']], "Not Found")
+                    country = row[getValue['countryDescriptionEn']]
+                    if country in countryReplace:
+                        country = countryReplace[country]
+                    Address_tmp.locnadminUnitL1 += countryList.setdefault(country, countryNotFoundBase + country)
                     Address_tmp.locnfullAddress += row[getValue['address']]
                     Address_tmp.locnpostName += row[getValue['city']]
-                    if str(row[getValue['postCode']]) != "nan":
+                    if str(row[getValue['postCode']]) != "":
                         Address_tmp.locnpostCode += row[getValue['postCode']]
                     addressDict[row[getValue['address']]] = Address_tmp
 
@@ -156,7 +159,7 @@ def main(inputfile,model,configfile,outputfile):
                 # Create Location #
                 #-----------------#
                 geographicName = str(row[getValue['recipientName']]) + ', ' + str(row[getValue['city']]) + ', ' + str(row[getValue['countryDescriptionEn']])
-                if str(geographicName) != "nan":
+                if str(geographicName) != "":
                     if geographicName in locationDict:
                         Location_tmp = locationDict[geographicName]
                     else:
@@ -166,7 +169,6 @@ def main(inputfile,model,configfile,outputfile):
                         Location_tmp.locngeographicName += geographicName
                         Location_tmp.locnaddress += Address_tmp
                         addressDict[geographicName] = Location_tmp
-
 
                 #------------------#
                 # Create Recipient #
@@ -178,7 +180,7 @@ def main(inputfile,model,configfile,outputfile):
                     URISpec = URISpecification(def_base_uri,{"label":lbl})
                     Recipient_tmp = ontology.Recipient(uri=URISpec)
                     Recipient_tmp.prefLabel += row[getValue['recipientName']]
-                    if str(geographicName) != "nan":
+                    if str(geographicName) != "":
                         Recipient_tmp.hasLocation += Location_tmp
                     recipientType = recipientCatg[row[getValue['recipientTypeDescription']].casefold()]
                     recipientURI = Recipient_tmp.getInstanceUri()
@@ -191,12 +193,17 @@ def main(inputfile,model,configfile,outputfile):
                     elif row[getValue['isNGO']]:
                         recipientType = "NGO"
 
+
+
                     # If needed, an extra type for the Recipient is assigned
                     if recipientType == "Registered Organisation":
                         RecipientAlter_tmp = ontology.rovRegisteredOrganization(uri=None, imposeURI=recipientURI)
                         RecipientAlter_tmp.rovlegalName += row[getValue['recipientName']]
-                        if str(row[getValue['recipientVAT']]) != "nan":
-                            RecipientAlter_tmp.rovregistration += row[getValue['recipientVAT']]
+                        if str(row[getValue['recipientVAT']]) != "":
+                            lbl = "recipientVAT" + str(ix)
+                            URISpec = URISpecification(def_base_uri,{"label":lbl})
+                            RecipientVAT_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['recipientVAT']])
+                            RecipientAlter_tmp.rovregistration += RecipientVAT_tmp
                         RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','RegisteredOrganisation')
                     elif recipientType == "Public Organisation":
                         RecipientAlter_tmp = ontology.cpovPublicOrganisation(uri=None, imposeURI=recipientURI)
@@ -212,13 +219,19 @@ def main(inputfile,model,configfile,outputfile):
                         RecipientAlter_tmp = ontology.TrustFund(uri=None, imposeURI=recipientURI)
                     elif recipientType == "NFPO":
                         RecipientAlter_tmp = ontology.NonProfitOrganisation(uri=None, imposeURI=recipientURI)
-                        if str(row[getValue['recipientVAT']]) != "nan":
-                            RecipientAlter_tmp.rovregistration += row[getValue['recipientVAT']]
+                        if str(row[getValue['recipientVAT']]) != "":
+                            lbl = "recipientVAT" + str(ix)
+                            URISpec = URISpecification(def_base_uri,{"label":lbl})
+                            RecipientVAT_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['recipientVAT']])
+                            RecipientAlter_tmp.rovregistration += RecipientVAT_tmp
                         RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','NFPO')
                     elif recipientType == "NGO":
                         RecipientAlter_tmp = ontology.NGO(uri=None, imposeURI=recipientURI)
-                        if str(row[getValue['recipientVAT']]) != "nan":
-                            RecipientAlter_tmp.rovregistration += row[getValue['recipientVAT']]
+                        if str(row[getValue['recipientVAT']]) != "":
+                            lbl = "recipientVAT" + str(ix)
+                            URISpec = URISpecification(def_base_uri,{"label":lbl})
+                            RecipientVAT_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['recipientVAT']])
+                            RecipientAlter_tmp.rovregistration += RecipientVAT_tmp
                         RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','NGO')
                     else:
                         print('Recipient: no additional type match.')
@@ -228,7 +241,7 @@ def main(inputfile,model,configfile,outputfile):
                 # -----------------------#
                 # Create Action Location #
                 # -----------------------#
-                if str(row[getValue['actionLocation']]) != "nan":
+                if str(row[getValue['actionLocation']]) != "":
                     if row[getValue['actionLocation']] in actionLocationDict:
                         ActionLocation_tmp = actionLocationDict[row[getValue['actionLocation']]]
                     else:
@@ -252,7 +265,7 @@ def main(inputfile,model,configfile,outputfile):
                     LegalCommitment_tmp.fundingType += row[getValue['fundingType']]
                 if row[getValue['isCoordinator']]:
                     LegalCommitment_tmp.hasCoordinator += Recipient_tmp
-                if str(row[getValue['actionLocation']]) != "nan":
+                if str(row[getValue['actionLocation']]) != "":
                     LegalCommitment_tmp.hasActionLocation += ActionLocation_tmp
                 legalCommitmentDict[row[getValue['subject']]] = LegalCommitment_tmp
 
@@ -327,7 +340,7 @@ def main(inputfile,model,configfile,outputfile):
                     BudgetaryCommitment_tmp.commitmentKey += CommitmentKey_tmp
                     BudgetaryCommitment_tmp.dctdate += row[getValue['year']]
                     actionTypeVal = checkControlledDictionary(actionTypeDict,'actionType','actionTypeDescriptionEn','actionType')
-                    if str(actionTypeVal) != "nan":
+                    if str(actionTypeVal) != "":
                         BudgetaryCommitment_tmp.actionType += actionTypeVal
                     financialManagementAreaBase = config_data['financialManagementAreaBase']
                     BudgetaryCommitment_tmp.financialManagementArea += financialManagementAreaBase + row[getValue['financialManagementArea']]
@@ -357,27 +370,13 @@ def main(inputfile,model,configfile,outputfile):
     output = open(outputfile,'w')
     with click.progressbar(session.rdf_statements(), label='Printing triples', length=nbrdfstatements) as total:
         for (subject, predicate, obj) in total:
-            if obj not in session.instances:
+            if 'ontology_alchemy.base' in str(type(obj)):
+                output.write("<%s> <%s> <%s> .\n" % (subject, predicate, obj.uri))
+            else:
                 if isinstance(obj, str) and obj.startswith("http://"):
                     output.write("<%s> <%s> <%s> .\n" % (subject, predicate, obj))
                 else:
                     output.write('<%s> <%s> "%s" .\n' % (subject, predicate, obj))
-            else:
-                output.write("<%s> <%s> <%s> .\n" % (subject, predicate, obj.uri))
-
-
-
-def read_csv(filename, columns):
-    df = pandas.read_csv(filename, sep=',', encoding = "ANSI", quotechar='"')#, names=columns)
-    # data = df.values
-    # print(df['AMNT'])
-    # print(data[19,:]) # some tricky lines to do a sanity check
-    # print(data[23433,:])
-    return df
-
-def load_ontology(filename):
-    ontology = Ontology.load(filename)
-    return ontology
 
 def transform_to_csv(filename):
     filename_csv = 'FTS.csv'
