@@ -120,10 +120,13 @@ def main(inputfile,model,configfile,outputfile):
     # Create Instances of Dataset   #
     #-------------------------------#
 
+    flushfrequency = config_data['flushfrequency'] #nb of rows before flushing the data to file.
+    batchlimits = range(10000,len(data.index),10000)
+    output = open(outputfile,'w',encoding='utf8') # clear file contents
     # Go through the data file creating all instances
     with click.progressbar(data.iterrows(), label='Creating instances', length=len(data.index)) as total:
         for ix, row in total:
-            print(ix)
+
             if ix < numberOfRowsToConsider:
 
                 #----------------#
@@ -153,7 +156,7 @@ def main(inputfile,model,configfile,outputfile):
                 #------------------#
                 # Create Recipient #
                 #------------------#
-                lbl = row[getValue['recipientName']]
+                lbl = row[getValue['recipientName']] + geographicName
                 URISpec = URISpecification(def_base_uri,lbl)
                 Recipient_tmp = ontology.Recipient(uri=URISpec)
                 Recipient_tmp.prefLabel += row[getValue['recipientName']]
@@ -221,7 +224,7 @@ def main(inputfile,model,configfile,outputfile):
                 # ------------------------#
                 # Create Legal Commitment #
                 # ------------------------#
-                lbl = row[getValue['subject']] + row[getValue['fundingType']] + str(row[getValue['isCoordinator']])
+                lbl = row[getValue['subject']] + row[getValue['fundingType']] + str(row[getValue['isCoordinator']]) + row[getValue['recipientName']]
                 URISpec = URISpecification(def_base_uri,lbl)
                 LegalCommitment_tmp = ontology.LegalCommitment(uri=URISpec)
                 LegalCommitment_tmp.dctdescription += row[getValue['subject']]
@@ -290,7 +293,7 @@ def main(inputfile,model,configfile,outputfile):
                 # ----------------------------#
                 # Create Budgetary Commitment #
                 # ----------------------------#
-                lbl = str(row[getValue['year']]) + row[getValue['financialManagementArea']] + str(row[getValue['expenseType']])
+                lbl = str(row[getValue['positionKey']]) + row[getValue['financialManagementArea']] + str(row[getValue['expenseType']]) + str(row[getValue['commitmentKey']]) + str(row[getValue['totalValue']])
                 URISpec = URISpecification(def_base_uri,lbl)
                 BudgetaryCommitment_tmp = ontology.BudgetaryCommitment(uri=URISpec)
                 BudgetaryCommitment_tmp.positionKey += PositionKey_tmp
@@ -315,8 +318,15 @@ def main(inputfile,model,configfile,outputfile):
 
                 # we will link to URI directly in indicative transaction
 
+                if ix in batchlimits:
+                    flushToFile(session,output)
+
+    flushToFile(session,output)
+
+
+def flushToFile(session,output):
     #-----------------------------------------------#
-    # Print all triples to file                     #
+    # Print triples so far to file                  #
     #-----------------------------------------------#
 
     # briefly compute total numer of lines to get a time estimate
@@ -326,8 +336,7 @@ def main(inputfile,model,configfile,outputfile):
         nbrdfstatements += 1
 
     # generate all triples and write to file
-    output = open(outputfile,'w')
-    with click.progressbar(tripleset, label='Printing triples', length=nbrdfstatements) as total:
+    with click.progressbar(tripleset, label='Flushing progress', length=nbrdfstatements) as total:
         for (subject, predicate, obj) in total:
             if 'ontology_alchemy.base' in str(type(obj)):
                 output.write("<%s> <%s> <%s> .\n" % (subject, predicate, obj.uri))
@@ -336,6 +345,11 @@ def main(inputfile,model,configfile,outputfile):
                     output.write("<%s> <%s> <%s> .\n" % (subject, predicate, obj))
                 else:
                     output.write('<%s> <%s> "%s" .\n' % (subject, predicate, obj))
+
+    # clear Session
+    session.clear()
+    session = Session.get_current()
+
 
 def transform_to_csv(filename):
     filename_csv = 'FTS.csv'

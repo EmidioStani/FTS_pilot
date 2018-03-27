@@ -115,6 +115,7 @@ skos:definition rdf:type owl:AnnotationProperty .
 fts:actionType rdf:type owl:ObjectProperty ;
                rdfs:domain fts:BudgetaryCommitment ;
                rdfs:range skos:Concept ;
+               vann:usageNote "Cardinality [1..1]" ;
                rdfs:comment "Can be PG (Program), PA (Preparatory Action) or OT (Others)."@en ;
                rdfs:label "action Type"@en .
 
@@ -124,6 +125,7 @@ fts:commitmentKey rdf:type owl:ObjectProperty ;
                   rdfs:subPropertyOf adms:identifier ;
                   rdfs:domain fts:BudgetaryCommitment ;
                   rdfs:range adms:Identifier ;
+                  vann:usageNote "Cardinality [1..1]" ;
                   rdfs:comment "Identifier of the budgetary commitment: The budgetary commitment is the operation reserving the appropriation necessary to cover subsequent payments to honour a legal commitment."@en ;
                   rdfs:label "commitment Key"@en .
 
@@ -132,6 +134,7 @@ fts:commitmentKey rdf:type owl:ObjectProperty ;
 fts:committedBy rdf:type owl:ObjectProperty ;
                 rdfs:domain fts:IndicativeTransaction ;
                 rdfs:range skos:Concept ;
+                vann:usageNote "Cardinality [1..1]" ;
                 rdfs:comment "Directorate-General of the European Commission that makes the commitment. Takes values from the Corporate Bodies NAL."@en ;
                 rdfs:label "committed By"@en .
 
@@ -140,6 +143,7 @@ fts:committedBy rdf:type owl:ObjectProperty ;
 fts:committedTo rdf:type owl:ObjectProperty ;
                 rdfs:domain fts:IndicativeTransaction ;
                 rdfs:range fts:Recipient ;
+                vann:usageNote "Cardinality [1..1]" ;
                 rdfs:comment "The recipient to whom the amount is committed."@en ;
                 rdfs:label "committed To"@en .
 
@@ -148,6 +152,7 @@ fts:committedTo rdf:type owl:ObjectProperty ;
 fts:expenseType rdf:type owl:ObjectProperty ;
                 rdfs:domain fts:BudgetaryCommitment ;
                 rdfs:range skos:Concept ;
+                vann:usageNote "Cardinality [1..1]" ;
                 rdfs:comment "Indicates whether it is an administrative or operational expenditure."@en ;
                 rdfs:label "expense Type"@en .
 
@@ -156,6 +161,7 @@ fts:expenseType rdf:type owl:ObjectProperty ;
 fts:financialManagementArea rdf:type owl:ObjectProperty ;
                             rdfs:domain fts:BudgetaryCommitment ;
                             rdfs:range skos:Concept ;
+                            vann:usageNote "Cardinality [1..1]" ;
                             rdfs:comment "The Financial Management Area represents the budget area, being BGUE (Budget Général de l'Union Européenne) or FEDF (European Development Fund)"@en ;
                             rdfs:label "financial Management Area"@en .
 
@@ -164,6 +170,7 @@ fts:financialManagementArea rdf:type owl:ObjectProperty ;
 fts:hasActionLocation rdf:type owl:ObjectProperty ;
                       rdfs:domain fts:LegalCommitment ;
                       rdfs:range dct:Location ;
+                      vann:usageNote "Cardinality [0..n]" ;
                       rdfs:comment "Geographic location in which the action is carried out. This can differ from the location of the recipient."@en ;
                       rdfs:label "has Action Location"@en .
 
@@ -172,6 +179,7 @@ fts:hasActionLocation rdf:type owl:ObjectProperty ;
 fts:hasBudgetLine rdf:type owl:ObjectProperty ;
                   rdfs:domain fts:BudgetaryCommitment ;
                   rdfs:range <http://data.europa.eu/bud#Nomenclature> ;
+                  vann:usageNote "Cardinality [1..1]" ;
                   rdfs:comment "Reference to the EU Budget line under which this commitment is recorded."@en ;
                   rdfs:label "has Budget Line"@en .
 
@@ -180,6 +188,7 @@ fts:hasBudgetLine rdf:type owl:ObjectProperty ;
 fts:hasCoordinator rdf:type owl:ObjectProperty ;
                    rdfs:domain fts:LegalCommitment ;
                    rdfs:range fts:Recipient ;
+                   vann:usageNote "Cardinality [1..1]" ;
                    rdfs:comment "In case of multiple recipients, this relationship indicates which party is the coordinator of the contract or grant."@en ;
                    rdfs:label "has Coordinator"@en .
 
@@ -188,6 +197,7 @@ fts:hasCoordinator rdf:type owl:ObjectProperty ;
 fts:hasEstimatedValue rdf:type owl:ObjectProperty ;
                       rdfs:domain fts:IndicativeTransaction ;
                       rdfs:range <http://data.europa.eu/bud#MonetaryValue> ;
+                      vann:usageNote "Cardinality [0..1]" ;
                       rdfs:comment "Estimated amount / indicative share for a specific beneficiary of a legal commitment. This information is not always available, depending on the type of agreement and in accordance with the Financial Regulation."@en ;
                       rdfs:label "has Estimated Value"@en .
 
@@ -196,6 +206,7 @@ fts:hasEstimatedValue rdf:type owl:ObjectProperty ;
 fts:hasIndicativeTransaction rdf:type owl:ObjectProperty ;
                              rdfs:domain fts:BudgetaryCommitment ;
                              rdfs:range fts:IndicativeTransaction ;
+                             vann:usageNote "Cardinality [0..n]" ;
                              rdfs:comment "A Budgetary Commitment can have different transactions linked to it."@en ;
                              rdfs:label "has Indicative Transaction"@en .
 
@@ -204,6 +215,7 @@ fts:hasIndicativeTransaction rdf:type owl:ObjectProperty ;
 fts:hasLegalCommitment rdf:type owl:ObjectProperty ;
                        rdfs:domain fts:BudgetaryCommitment ;
                        rdfs:range fts:LegalCommitment ;
+                       vann:usageNote "Cardinality [1..1]" ;
                        rdfs:comment "A Budgetary Commitment is always linked to a Legal Commitment."@en ;
                        rdfs:label "has Legal Commitment"@en .
 
@@ -212,6 +224,7 @@ fts:hasLegalCommitment rdf:type owl:ObjectProperty ;
 fts:hasLocation rdf:type owl:ObjectProperty ;
                 rdfs:domain fts:Recipient ;
                 rdfs:range dct:Location ;
+                vann:usageNote "Cardinality [0..1]" ;
                 rdfs:comment "The geographic area in which the beneficiary is located. When the recipient is a natural person, NUTS2  is used. When the recipient is an organisation, the full address is stated. "@en ;
                 rdfs:label "has Location"@en .
 
@@ -220,6 +233,7 @@ fts:hasLocation rdf:type owl:ObjectProperty ;
 fts:hasTotalValue rdf:type owl:ObjectProperty ;
                   rdfs:domain fts:BudgetaryCommitment ;
                   rdfs:range <http://data.europa.eu/bud#MonetaryValue> ;
+                  vann:usageNote "Cardinality [0..1]" ;
                   rdfs:comment "The Total Value is the legally committed amount, i.e. the amount the EC has committed itself to paying to the beneficiary (grant) or the contractor (procurement). In case of Grants, specifies the Maximum contribution of the EC as indicated in the Grant Agreement/Decision document. In case of Procurements, specifies the Maximum Total Contract Amount as indicated in the procurement contract."@en ;
                   rdfs:label "has Total Value"@en .
 
@@ -229,6 +243,7 @@ fts:positionKey rdf:type owl:ObjectProperty ;
                 rdfs:subPropertyOf adms:identifier ;
                 rdfs:domain fts:BudgetaryCommitment ;
                 rdfs:range adms:Identifier ;
+                vann:usageNote "Cardinality [1..1]" ;
                 rdfs:comment "Unique identifier of the position."@en ;
                 rdfs:label "position Key"@en .
 

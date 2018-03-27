@@ -1,6 +1,7 @@
 {
 "baseuri": "http://fts.example.com/",
 "numberOfRowsToConsider": "1000",
+"flushfrequency": "10000",
 "defaultoutputfile": "output.nt",
 "defaultinputfile": "FTS.csv",
 "defaultmodelfile": "FTS.ttl",
