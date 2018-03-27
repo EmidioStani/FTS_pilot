@@ -1,6 +1,6 @@
 {
 "baseuri": "http://fts.example.com/",
-"numberOfRowsToConsider": "600",
+"numberOfRowsToConsider": "1000",
 "defaultoutputfile": "output.nt",
 "defaultinputfile": "FTS.csv",
 "defaultmodelfile": "FTS.ttl",
@@ -118,5 +118,6 @@
 "expenseTypeMap": {
     "0": "Operational",
     "1": "Administrative"
-  }
+  },
+"nomenclatureBase": "http://data.europa.eu/bud/data#ABB"
 }

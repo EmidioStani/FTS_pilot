@@ -38,6 +38,8 @@ def main(inputfile,model,configfile,outputfile):
         recipientCatg_new[newkey] = recipientCatg[key]
     recipientCatg = recipientCatg_new
 
+    nomenclatureBase = config_data['nomenclatureBase']
+
     # Set filenames
     data_filename = inputfile
     model_filename = model
@@ -47,8 +49,8 @@ def main(inputfile,model,configfile,outputfile):
     print('Loading data...')
     os.chdir(os.path.join(cwd,'data/raw'))
     data = pandas.read_csv(data_filename, sep=',', encoding = "ANSI", quotechar='"', na_filter=False)
+    data = data.replace({'\n': ', '}, regex=True)
     session = Session.get_current()
-
     # Load model from Turtle file
     print('Loading model...')
     os.chdir(os.path.join(cwd,'models'))
@@ -68,10 +70,9 @@ def main(inputfile,model,configfile,outputfile):
     #----------------------------------#
     # Load all controlled vocabularies #
     #----------------------------------#
-
     print('Loading controlled vocabularies...')
-    # Create dictionary with all countries
-    countriesmodelfile = config_data["countriesmodelfile"]
+
+    # Query a file to get a dictionary with keys 'o' and values 'uri'
     def getQueryDict(modelfile):
         graph = rdflib.Graph()
         graph.parse(modelfile)
@@ -87,10 +88,11 @@ def main(inputfile,model,configfile,outputfile):
             objdict[str(row.o.toPython())] = str(row.uri.toPython())
         return objdict
 
+    # Create dictionary of Countries
+    countriesmodelfile = config_data["countriesmodelfile"]
     countryList = getQueryDict(countriesmodelfile)
     countryNotFoundBase = config_data["countryNotFoundBase"]
     countryReplace = config_data["countryReplace"]
-
 
     # Create URI for currency (only EUR for now)
     currencyEUR = config_data["currencyEUR"]
@@ -107,7 +109,7 @@ def main(inputfile,model,configfile,outputfile):
     def checkControlledDictionary(controlledDict,keyLabel,valueLabel,label):
         # updates the controlled vocabulary and return the skos Concept URI to be used
         if row[getValue[keyLabel]] not in controlledDict:
-            lbl = label
+            lbl = label + row[getValue[valueLabel]]
             URISpec = URISpecification(def_base_uri,lbl)
             Concept_tmp = ontology.skosConcept(uri=URISpec)
             Concept_tmp.skosprefLabel += row[getValue[valueLabel]]
@@ -121,7 +123,7 @@ def main(inputfile,model,configfile,outputfile):
     # Go through the data file creating all instances
     with click.progressbar(data.iterrows(), label='Creating instances', length=len(data.index)) as total:
         for ix, row in total:
-
+            print(ix)
             if ix < numberOfRowsToConsider:
 
                 #----------------#
@@ -175,7 +177,7 @@ def main(inputfile,model,configfile,outputfile):
                     URISpec = URISpecification(def_base_uri,lbl)
                     RecipientVAT_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['recipientVAT']])
                     RecipientAlter_tmp.rovregistration += RecipientVAT_tmp
-                    RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','RegisteredOrganisation' + row[getValue['recipientName']])
+                    RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','RegisteredOrganisation')
                 elif recipientType == "Public Organisation":
                     RecipientAlter_tmp = ontology.cpovPublicOrganisation(uri=None, imposeURI=recipientURI)
                     # RecipientAlter_tmp.orgclassification += # Should be filled in by value of controlled voc. Where to find? No info in spreadsheet either.
@@ -194,14 +196,14 @@ def main(inputfile,model,configfile,outputfile):
                     URISpec = URISpecification(def_base_uri,lbl)
                     RecipientVAT_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['recipientVAT']])
                     RecipientAlter_tmp.rovregistration += RecipientVAT_tmp
-                    RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','NFPO' + row[getValue['recipientVAT']])
+                    RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','NFPO')
                 elif recipientType == "NGO":
                     RecipientAlter_tmp = ontology.NGO(uri=None, imposeURI=recipientURI)
                     lbl = row[getValue['recipientVAT']]
                     URISpec = URISpecification(def_base_uri,lbl)
                     RecipientVAT_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['recipientVAT']])
                     RecipientAlter_tmp.rovregistration += RecipientVAT_tmp
-                    RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','NGO' + row[getValue['recipientVAT']])
+                    RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','NGO')
                 else:
                     print('Recipient: no additional type match.')
 
@@ -268,9 +270,20 @@ def main(inputfile,model,configfile,outputfile):
                 # --------------------#
                 # Create Nomenclature # --> link to EU Budget
                 # --------------------#
-                lbl = row[getValue['budgetLine']] + row[getValue['headingEn']]
-                URISpec = URISpecification(def_base_uri,lbl)
-                Nomenclature_tmp = ontology.Nomenclature(uri=URISpec)
+                nomenclatureURI = nomenclatureBase + str(row[getValue['year']]) + '_SEC3' + row[getValue['budgetLine']].replace('.','_')
+                nbDots = row[getValue['budgetLine']].count('.')
+                if nbDots is 1:
+                    # Chapter
+                    Nomenclature_tmp = ontology.Chapter(uri=None, imposeURI=nomenclatureURI)
+                elif nbDots is 2:
+                    # Article
+                    Nomenclature_tmp = ontology.Article(uri=None, imposeURI=nomenclatureURI)
+                elif nbDots is 3:
+                    # Item
+                    Nomenclature_tmp = ontology.Item(uri=None, imposeURI=nomenclatureURI)
+                elif nbDots is 4:
+                    # SubItem
+                    Nomenclature_tmp = ontology.SubItem(uri=None, imposeURI=nomenclatureURI)
                 Nomenclature_tmp.alias += row[getValue['budgetLine']]
                 Nomenclature_tmp.heading += row[getValue['headingEn']]
 
@@ -308,12 +321,13 @@ def main(inputfile,model,configfile,outputfile):
 
     # briefly compute total numer of lines to get a time estimate
     nbrdfstatements = 0
-    for (subject, predicate, obj) in session.rdf_statements():
+    tripleset = set(session.rdf_statements())
+    for (subject, predicate, obj) in tripleset:
         nbrdfstatements += 1
 
-    # print all triples to the output file
+    # generate all triples and write to file
     output = open(outputfile,'w')
-    with click.progressbar(session.rdf_statements(), label='Printing triples', length=nbrdfstatements) as total:
+    with click.progressbar(tripleset, label='Printing triples', length=nbrdfstatements) as total:
         for (subject, predicate, obj) in total:
             if 'ontology_alchemy.base' in str(type(obj)):
                 output.write("<%s> <%s> <%s> .\n" % (subject, predicate, obj.uri))
