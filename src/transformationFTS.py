@@ -7,29 +7,35 @@ import os
 import json
 import inspect
 
-# load config file
+# load config file and default input options
 configfile = 'config.json'
 with open(configfile, encoding='utf-8-sig') as json_file:
     config_data = json.load(json_file)
 defaultinputfile = config_data['defaultinputfile']
 defaultmodelfile = config_data['defaultmodelfile']
 defaultoutputfile = config_data['defaultoutputfile']
+defaultcompressionlevel = config_data['defaultcompressionlevel']
 
 @click.command()
 @click.option('--inputfile', default=defaultinputfile, help='Input data in csv.')
 @click.option('--model', default=defaultmodelfile, help='The ttl model to use.')
 @click.option('--configfile', default=configfile, help='The configuration file to use.')
 @click.option('--outputfile', default=defaultoutputfile, help='The output file to write to.')
+@click.option('--compression', default=defaultcompressionlevel, help='The compression level (0, 1 or 2).')
 
-def main(inputfile,model,configfile,outputfile):
+def main(inputfile,model,configfile,outputfile,compression):
+
+    compression = int(compression)
 
     print('Loading configuration file...')
+
     # Read configuration file
     with open(configfile, encoding='utf-8-sig') as json_file:
         config_data = json.load(json_file)
     def_base_uri = config_data['baseuri']
     getValue = config_data['getValue']
     numberOfRowsToConsider = int(config_data['numberOfRowsToConsider'])
+
     # Load Recipient Categorisation dictionary
     recipientCatg = config_data['recipientCatg']
     recipientCatg_new = dict()
@@ -38,7 +44,19 @@ def main(inputfile,model,configfile,outputfile):
         recipientCatg_new[newkey] = recipientCatg[key]
     recipientCatg = recipientCatg_new
 
+    # Load Public Organisation dictionary
+    publicOrganisationCatg = config_data['publicOrganisationCatg']
+    publicOrganisationCatg_new = dict()
+    for key in publicOrganisationCatg:
+        newkey = key.casefold()
+        publicOrganisationCatg_new[newkey] = publicOrganisationCatg[key]
+    publicOrganisationCatg = publicOrganisationCatg_new
+
     nomenclatureBase = config_data['nomenclatureBase']
+
+    #------------------------#
+    # Load model and data    #
+    #------------------------#
 
     # Set filenames
     data_filename = inputfile
@@ -48,8 +66,8 @@ def main(inputfile,model,configfile,outputfile):
     # Load data
     print('Loading data...')
     os.chdir(os.path.join(cwd,'data/raw'))
-    data = pandas.read_csv(data_filename, sep=',', encoding = "ANSI", quotechar='"', na_filter=False)
-    data = data.replace({'\n': ', '}, regex=True)
+    data = pandas.read_csv(data_filename, sep=',', encoding = "ANSI", quotechar='"', na_filter=False, low_memory=False)
+    data = data.replace({'\n': ', '}, regex=True) # remove newline characters in data
     session = Session.get_current()
     # Load model from Turtle file
     print('Loading model...')
@@ -120,9 +138,10 @@ def main(inputfile,model,configfile,outputfile):
     # Create Instances of Dataset   #
     #-------------------------------#
 
-    flushfrequency = config_data['flushfrequency'] #nb of rows before flushing the data to file.
-    batchlimits = range(10000,len(data.index),10000)
-    output = open(outputfile,'w',encoding='utf8') # clear file contents
+    flushfrequency = int(config_data['flushfrequency']) #nb of rows before flushing the data to file.
+    batchlimits = range(flushfrequency,len(data.index),flushfrequency)
+    output = open(outputfile,'w',encoding='utf8')
+
     # Go through the data file creating all instances
     with click.progressbar(data.iterrows(), label='Creating instances', length=len(data.index)) as total:
         for ix, row in total:
@@ -183,7 +202,7 @@ def main(inputfile,model,configfile,outputfile):
                     RecipientAlter_tmp.rovorgType += checkControlledDictionary(organisationTypeDict,'organisationTypeCode','organisationTypeDescription','RegisteredOrganisation')
                 elif recipientType == "Public Organisation":
                     RecipientAlter_tmp = ontology.cpovPublicOrganisation(uri=None, imposeURI=recipientURI)
-                    # RecipientAlter_tmp.orgclassification += # Should be filled in by value of controlled voc. Where to find? No info in spreadsheet either.
+                    RecipientAlter_tmp.orgclassification += publicOrganisationCatg[row[getValue['recipientTypeDescription']].casefold()] # literal for the pilot
                 elif recipientType == "Person":
                     RecipientAlter_tmp = ontology.foafPerson(uri=None, imposeURI=recipientURI)
                     RecipientAlter_tmp.foaffamilyName += row[getValue['recipientName']]
@@ -210,8 +229,6 @@ def main(inputfile,model,configfile,outputfile):
                 else:
                     print('Recipient: no additional type match.')
 
-
-
                 # -----------------------#
                 # Create Action Location #
                 # -----------------------#
@@ -224,7 +241,7 @@ def main(inputfile,model,configfile,outputfile):
                 # ------------------------#
                 # Create Legal Commitment #
                 # ------------------------#
-                lbl = row[getValue['subject']] + row[getValue['fundingType']] + str(row[getValue['isCoordinator']]) + row[getValue['recipientName']]
+                lbl = str(row[getValue['commitmentKey']])
                 URISpec = URISpecification(def_base_uri,lbl)
                 LegalCommitment_tmp = ontology.LegalCommitment(uri=URISpec)
                 LegalCommitment_tmp.dctdescription += row[getValue['subject']]
@@ -245,7 +262,7 @@ def main(inputfile,model,configfile,outputfile):
                 # ------------------------------#
                 # Create Indicative Transaction #
                 # ------------------------------#
-                lbl = row[getValue['DG']] + row[getValue['recipientName']] + str(row[getValue['totalValue']]) # check if allowed
+                lbl = row[getValue['DG']] + row[getValue['recipientName']] + str(row[getValue['totalValue']]) + geographicName
                 URISpec = URISpecification(def_base_uri,lbl)
                 IndicativeTransaction_tmp = ontology.IndicativeTransaction(uri=URISpec)
                 IndicativeTransaction_tmp.committedTo += Recipient_tmp
@@ -275,18 +292,19 @@ def main(inputfile,model,configfile,outputfile):
                 # --------------------#
                 nomenclatureURI = nomenclatureBase + str(row[getValue['year']]) + '_SEC3' + row[getValue['budgetLine']].replace('.','_')
                 nbDots = row[getValue['budgetLine']].count('.')
-                if nbDots is 1:
-                    # Chapter
-                    Nomenclature_tmp = ontology.Chapter(uri=None, imposeURI=nomenclatureURI)
-                elif nbDots is 2:
-                    # Article
-                    Nomenclature_tmp = ontology.Article(uri=None, imposeURI=nomenclatureURI)
+                if nbDots is 4:
+                    # SubItem
+                    Nomenclature_tmp = ontology.SubItem(uri=None, imposeURI=nomenclatureURI)
                 elif nbDots is 3:
                     # Item
                     Nomenclature_tmp = ontology.Item(uri=None, imposeURI=nomenclatureURI)
-                elif nbDots is 4:
-                    # SubItem
-                    Nomenclature_tmp = ontology.SubItem(uri=None, imposeURI=nomenclatureURI)
+                elif nbDots is 2:
+                    # Article
+                    Nomenclature_tmp = ontology.Article(uri=None, imposeURI=nomenclatureURI)
+                elif nbDots is 1:
+                    # Chapter
+                    Nomenclature_tmp = ontology.Chapter(uri=None, imposeURI=nomenclatureURI)
+
                 Nomenclature_tmp.alias += row[getValue['budgetLine']]
                 Nomenclature_tmp.heading += row[getValue['headingEn']]
 
@@ -305,7 +323,7 @@ def main(inputfile,model,configfile,outputfile):
                 BudgetaryCommitment_tmp.financialManagementArea += financialManagementAreaBase + row[getValue['financialManagementArea']]
                 expenseTypeBase = config_data['expenseTypeBase']
                 expenseTypeMap = config_data['expenseTypeMap']
-                BudgetaryCommitment_tmp.expenseType += expenseTypeBase + expenseTypeMap[str(row[getValue['expenseType']])] # should be skos:concept
+                BudgetaryCommitment_tmp.expenseType += expenseTypeBase + expenseTypeMap[str(row[getValue['expenseType']])]
                 BudgetaryCommitment_tmp.hasBudgetLine += Nomenclature_tmp
                 BudgetaryCommitment_tmp.hasTotalValue += MonetaryValue_tmp
                 BudgetaryCommitment_tmp.hasLegalCommitment += LegalCommitment_tmp
@@ -318,54 +336,57 @@ def main(inputfile,model,configfile,outputfile):
 
                 # we will link to URI directly in indicative transaction
 
+                #-----------------------------------------------#
+                # Print triples so far to file                  #
+                #-----------------------------------------------#
+
                 if ix in batchlimits:
-                    flushToFile(session,output)
+                    flushToFile(session,output,compression)
 
-    flushToFile(session,output)
+    flushToFile(session,output,compression)
+    output.close()
+
+    # ----------------------------#
+    # Transform triples to Turtle #
+    # ----------------------------#
+
+    if compression > 1:
+        print('Transforming the generated triples to Turtle...')
+        g = rdflib.Graph()
+        g.parse(outputfile, format="nt")
+        ttloutput = outputfile.rsplit('.')
+        g.serialize(destination=ttloutput[0] + '.ttl',format='turtle')
 
 
-def flushToFile(session,output):
-    #-----------------------------------------------#
-    # Print triples so far to file                  #
-    #-----------------------------------------------#
-
+def flushToFile(session,output,compression):
     # briefly compute total numer of lines to get a time estimate
     nbrdfstatements = 0
-    tripleset = set(session.rdf_statements())
+    if compression > 0:
+        tripleset = set(session.rdf_statements())
+    else:
+        tripleset = session.rdf_statements()
+
     for (subject, predicate, obj) in tripleset:
         nbrdfstatements += 1
 
     # generate all triples and write to file
-    with click.progressbar(tripleset, label='Flushing progress', length=nbrdfstatements) as total:
+    with click.progressbar(tripleset, label='Saving to file    ', length=nbrdfstatements) as total:
         for (subject, predicate, obj) in total:
             if 'ontology_alchemy.base' in str(type(obj)):
                 output.write("<%s> <%s> <%s> .\n" % (subject, predicate, obj.uri))
             else:
                 if isinstance(obj, str) and obj.startswith("http://"):
+                    obj = obj.replace(' ',"_")
                     output.write("<%s> <%s> <%s> .\n" % (subject, predicate, obj))
                 else:
+                    if isinstance(obj, str) and ('\\' in obj or '"' in obj):
+                        obj = obj.replace('"',"''") # replace double quotes by two single quotes
+                        obj = obj.replace('\\','\\\\').replace(r'\\\\',r'\\') # escape backslashes
                     output.write('<%s> <%s> "%s" .\n' % (subject, predicate, obj))
 
     # clear Session
     session.clear()
     session = Session.get_current()
-
-
-def transform_to_csv(filename):
-    filename_csv = 'FTS.csv'
-    in2csv(filename, filename_csv)
-    return filename_csv
-
-def findClass(classname):
-    uri = "error no label found"
-    for klass in Session.get_current().classes:
-        class_string = str(klass).split('.')
-        class_string = class_string[-1].split("'")
-        if str(class_string[0]) == classname:
-            uri = klass.__uri__
-    return uri
-
-
 
 if __name__ == "__main__":
     main()

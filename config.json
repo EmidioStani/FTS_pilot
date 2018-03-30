@@ -1,10 +1,11 @@
 {
 "baseuri": "http://fts.example.com/",
-"numberOfRowsToConsider": "1000",
+"numberOfRowsToConsider": "1000000",
 "flushfrequency": "10000",
 "defaultoutputfile": "output.nt",
 "defaultinputfile": "FTS.csv",
 "defaultmodelfile": "FTS.ttl",
+"defaultcompressionlevel": "1",
 "getValue": {
   "year": "BL_YEAR",
   "commitmentKey": "COM_HD_KEY",
@@ -96,6 +97,18 @@
     "NGO": "NGO",
     "NFPO": "NFPO"
   },
+"publicOrganisationCatg": {
+      "EIB - European Investment Bank": "EIB",
+      "EIF - European Investment Fund": "EIF",
+      "EU decentr. agency G.C. ABAC":	"EU decentralised agency",
+      "EU decentralised agency - G.C.":	"EU decentralised agency",
+      "EU executive agency  G.C. ABAC": "EU executive agency",
+      "EU inst & other body-G.C.ABAC":	"EU institutes & other bodies",
+      "EU inst. & other body - G.C.":	"EU institutes & other bodies",
+      "Intra-Commission":	"Intra-Commission",
+      "Non consolidated EC entities(2":	"Non consolidated EC entities",
+      "Other public bodies": "Other public bodies"
+  },
 "countriesmodelfile": "models/countries-skos.rdf",
 "currencyEUR": "http://publications.europa.eu/resource/authority/currency/EUR",
 "corporateBodyBase": "http://publications.europa.eu/resource/authority/corporate-body/",
@@ -107,7 +120,16 @@
 "countryNotFoundBase": "http://data.example.com/id/countrynotfound/",
 "countryReplace": {
   "Congo (Democratic Republic of)": "Congo",
-  "Ivory coast": "Côte d’Ivoire"
+  "Ivory coast": "Côte d’Ivoire",
+  "Montenegro (Republic of) ": "Montenegro",
+  "Serbia (Republic of)": "Serbia",
+  "Kosovo (under UN Security Council Resolution 1244/99)":"Kosovo",
+  "Macedonia (the former Yugoslav Republic of) ": "Former Yugoslav Republic of Macedonia",
+  "Myanmar": "Myanmar/Burma",
+  "Occupied Territories - Palestine": "Palestine",
+  "Sao Tome and Príncipe": "São Tomé and Príncipe",
+  "Gambia (the)": "The Gambia",
+  "Faeroe Islands": "Faroes"
 },
 "actionTypeBase": "http://publications.europa.eu/resource/authority/action-type/",
 "fundingTypeBase": "http://publications.europa.eu/resource/authority/funding-type/",
