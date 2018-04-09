@@ -1,6 +1,6 @@
 {
 "baseuri": "http://fts.example.com/",
-"numberOfRowsToConsider": "1000000",
+"numberOfRowsToConsider": "100",
 "flushfrequency": "10000",
 "defaultoutputfile": "output.nt",
 "defaultinputfile": "FTS.csv",
@@ -24,7 +24,7 @@
   "": "PRG_DESC_FR",
   "": "PRG_DESC_EN",
   "": "PRG_DESC_DE",
-  "legalCommitment": "CONTRACT_KEY",
+  "contractKey": "CONTRACT_KEY",
   "": "COFINANCING_RATE",
   "": "LE_KEY",
   "": "IS_NATURAL_PERSON",

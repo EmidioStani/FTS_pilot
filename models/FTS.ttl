@@ -148,6 +148,16 @@ fts:committedTo rdf:type owl:ObjectProperty ;
                 rdfs:label "committed To"@en .
 
 
+###  http://data.europa.eu/fts/def/contractKey
+fts:contractKey rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf adms:identifier ;
+                rdfs:domain fts:LegalCommitment ;
+                rdfs:range adms:Identifier ;
+                vann:usageNote "Cardinality [1..1]" ;
+                rdfs:comment "The contract key is an identifier of the Legal Commitment as used in the accounting system of DG BUDG.The contract key is an identifier of the Legal Commitment as used in the accounting system of DG BUDG."@en ;
+                rdfs:label "contract Key"@en .
+
+
 ###  http://data.europa.eu/fts/def/expenseType
 fts:expenseType rdf:type owl:ObjectProperty ;
                 rdfs:domain fts:BudgetaryCommitment ;
@@ -402,30 +412,6 @@ foaf:familyName rdf:type owl:DatatypeProperty ;
 #    Classes
 #################################################################
 
-###  http://data.europa.eu/bud#Article
-<http://data.europa.eu/bud#Article> rdf:type owl:Class ;
-                                    rdfs:subClassOf <http://data.europa.eu/bud#Nomenclature> ;
-                                    vann:usageNote "One article can have several items. Each item belongs to exactly one article."@en ;
-                                    rdfs:comment "An article in a specific title of the EU budget."@en ;
-                                    rdfs:label "Article"@en .
-
-
-###  http://data.europa.eu/bud#Chapter
-<http://data.europa.eu/bud#Chapter> rdf:type owl:Class ;
-                                    rdfs:subClassOf <http://data.europa.eu/bud#Nomenclature> ;
-                                    vann:usageNote "One chapter can have several articles. Each article belongs to exactly one chapter."@en ;
-                                    rdfs:comment "A chapter in a specific title of the EU budget."@en ;
-                                    rdfs:label "Chapter"@en .
-
-
-###  http://data.europa.eu/bud#Item
-<http://data.europa.eu/bud#Item> rdf:type owl:Class ;
-                                 rdfs:subClassOf <http://data.europa.eu/bud#Nomenclature> ;
-                                 vann:usageNote "One item can have several sub-items. Each sub-item belongs to exactly one item."@en ;
-                                 rdfs:comment "An item in a specific article of the EU budget."@en ;
-                                 rdfs:label "Item"@en .
-
-
 ###  http://data.europa.eu/bud#MonetaryValue
 <http://data.europa.eu/bud#MonetaryValue> rdf:type owl:Class ;
                                           vann:usageNote "Used to assign a value to amount figures and reserves."@en ;
@@ -441,14 +427,6 @@ foaf:familyName rdf:type owl:DatatypeProperty ;
                                          rdfs:comment "The nomenclature class provides contextual information about amount instances, such as legal information, introductory texts, references, etc. "@en ;
                                          rdfs:label "Nomenclature"@en ;
                                          rdfs:seeAlso "https://joinup.ec.europa.eu/node/151960/"^^xsd:anyURI .
-
-
-###  http://data.europa.eu/bud#SubItem
-<http://data.europa.eu/bud#SubItem> rdf:type owl:Class ;
-                                    rdfs:subClassOf <http://data.europa.eu/bud#Nomenclature> ;
-                                    vann:usageNote "One item can have several sub-items. Each sub-item belongs to exactly one item."@en ;
-                                    rdfs:comment "A sub-item in a specific item of the EU budget."@en ;
-                                    rdfs:label "Sub-item"@en .
 
 
 ###  http://data.europa.eu/fts/def/BudgetaryCommitment

@@ -124,12 +124,15 @@ def main(inputfile,model,configfile,outputfile,compression):
     corporatebodyDict = {}
     actionTypeDict = {}
 
-    def checkControlledDictionary(controlledDict,keyLabel,valueLabel,label):
+    def checkControlledDictionary(controlledDict,keyLabel,valueLabel,label,base_uri=def_base_uri):
         # updates the controlled vocabulary and return the skos Concept URI to be used
         if row[getValue[keyLabel]] not in controlledDict:
-            lbl = label + row[getValue[valueLabel]]
-            URISpec = URISpecification(def_base_uri,lbl)
-            Concept_tmp = ontology.skosConcept(uri=URISpec)
+            if base_uri == def_base_uri:
+                lbl = label + row[getValue[valueLabel]]
+                URISpec = URISpecification(base_uri,lbl)
+                Concept_tmp = ontology.skosConcept(uri=URISpec)
+            else:
+                Concept_tmp = ontology.skosConcept(uri=None, imposeURI=base_uri + row[getValue[keyLabel]])
             Concept_tmp.skosprefLabel += row[getValue[valueLabel]]
             controlledDict[row[getValue[keyLabel]]] = Concept_tmp.getInstanceUri()
         return controlledDict[row[getValue[keyLabel]]]
@@ -146,17 +149,17 @@ def main(inputfile,model,configfile,outputfile,compression):
     with click.progressbar(data.iterrows(), label='Creating instances', length=len(data.index)) as total:
         for ix, row in total:
 
-            if ix < numberOfRowsToConsider:
+            if ix < numberOfRowsToConsider or numberOfRowsToConsider == -1:
 
                 #----------------#
                 # Create Address #
                 #----------------#
-                lbl = row[getValue['address']] + row[getValue['city']] + row[getValue['postCode']]
-                URISpec = URISpecification(def_base_uri,lbl)
-                Address_tmp = ontology.locnAddress(uri=URISpec)
                 country = row[getValue['countryDescriptionEn']]
                 if country in countryReplace:
                     country = countryReplace[country]
+                lbl = row[getValue['address']] + row[getValue['city']] + row[getValue['postCode']] + country
+                URISpec = URISpecification(def_base_uri,lbl)
+                Address_tmp = ontology.locnAddress(uri=URISpec)
                 Address_tmp.locnadminUnitL1 += countryList.setdefault(country, countryNotFoundBase + country)
                 Address_tmp.locnfullAddress += row[getValue['address']]
                 Address_tmp.locnpostName += row[getValue['city']]
@@ -232,10 +235,18 @@ def main(inputfile,model,configfile,outputfile,compression):
                 # -----------------------#
                 # Create Action Location #
                 # -----------------------#
-                lbl = row[getValue['actionLocation']]
+                actionlbl = row[getValue['actionLocation']]
+                if actionlbl:
+                    URISpec = URISpecification(def_base_uri,actionlbl)
+                    ActionLocation_tmp = ontology.dctLocation(uri=URISpec)
+                    ActionLocation_tmp.locngeographicName += row[getValue['actionLocation']]
+
+                # --------------------#
+                # Create Contract Key #
+                # --------------------#
+                lbl = str(row[getValue['contractKey']])
                 URISpec = URISpecification(def_base_uri,lbl)
-                ActionLocation_tmp = ontology.dctLocation(uri=URISpec)
-                ActionLocation_tmp.locngeographicName += row[getValue['actionLocation']]
+                ContractKey_tmp = ontology.admsIdentifier(uri=URISpec, label=row[getValue['contractKey']])
 
 
                 # ------------------------#
@@ -246,9 +257,12 @@ def main(inputfile,model,configfile,outputfile,compression):
                 LegalCommitment_tmp = ontology.LegalCommitment(uri=URISpec)
                 LegalCommitment_tmp.dctdescription += row[getValue['subject']]
                 LegalCommitment_tmp.fundingType += row[getValue['fundingType']]
+                LegalCommitment_tmp.contractKey += ContractKey_tmp
                 if row[getValue['isCoordinator']]:
                     LegalCommitment_tmp.hasCoordinator += Recipient_tmp
-                LegalCommitment_tmp.hasActionLocation += ActionLocation_tmp
+                if actionlbl:
+                    LegalCommitment_tmp.hasActionLocation += ActionLocation_tmp
+
 
                 # ----------------------#
                 # Create Monetary Value # --> link to EU Budget
@@ -270,7 +284,7 @@ def main(inputfile,model,configfile,outputfile,compression):
                 DG = row[getValue['DG']]
                 if DG in corporateBodyReplace:
                     DG = corporateBodyReplace[DG]
-                IndicativeTransaction_tmp.committedBy += checkControlledDictionary(corporatebodyDict,'DG','DGDescriptionEn','CorporateBody')
+                IndicativeTransaction_tmp.committedBy += checkControlledDictionary(corporatebodyDict,'DG','DGDescriptionEn','CorporateBody',base_uri=corporateBodyBase)
                 IndicativeTransaction_tmp.hasEstimatedValue += MonetaryValue_tmp
 
                 # --------------------#
@@ -291,22 +305,6 @@ def main(inputfile,model,configfile,outputfile,compression):
                 # Create Nomenclature # --> link to EU Budget
                 # --------------------#
                 nomenclatureURI = nomenclatureBase + str(row[getValue['year']]) + '_SEC3' + row[getValue['budgetLine']].replace('.','_')
-                nbDots = row[getValue['budgetLine']].count('.')
-                if nbDots is 4:
-                    # SubItem
-                    Nomenclature_tmp = ontology.SubItem(uri=None, imposeURI=nomenclatureURI)
-                elif nbDots is 3:
-                    # Item
-                    Nomenclature_tmp = ontology.Item(uri=None, imposeURI=nomenclatureURI)
-                elif nbDots is 2:
-                    # Article
-                    Nomenclature_tmp = ontology.Article(uri=None, imposeURI=nomenclatureURI)
-                elif nbDots is 1:
-                    # Chapter
-                    Nomenclature_tmp = ontology.Chapter(uri=None, imposeURI=nomenclatureURI)
-
-                Nomenclature_tmp.alias += row[getValue['budgetLine']]
-                Nomenclature_tmp.heading += row[getValue['headingEn']]
 
                 # ----------------------------#
                 # Create Budgetary Commitment #
@@ -324,7 +322,7 @@ def main(inputfile,model,configfile,outputfile,compression):
                 expenseTypeBase = config_data['expenseTypeBase']
                 expenseTypeMap = config_data['expenseTypeMap']
                 BudgetaryCommitment_tmp.expenseType += expenseTypeBase + expenseTypeMap[str(row[getValue['expenseType']])]
-                BudgetaryCommitment_tmp.hasBudgetLine += Nomenclature_tmp
+                BudgetaryCommitment_tmp.hasBudgetLine += nomenclatureURI
                 BudgetaryCommitment_tmp.hasTotalValue += MonetaryValue_tmp
                 BudgetaryCommitment_tmp.hasLegalCommitment += LegalCommitment_tmp
                 BudgetaryCommitment_tmp.hasIndicativeTransaction += IndicativeTransaction_tmp
